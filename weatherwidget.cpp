@@ -39,10 +39,15 @@ void WeatherWidget::resizeEvent(QResizeEvent *e)
 void WeatherWidget::paintEvent(QPaintEvent *e)
 {
     Q_UNUSED(e);
+    const Dock::DisplayMode displayMode = qApp->property(PROP_DISPLAY_MODE).value<Dock::DisplayMode>();
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setPen(Qt::white);
-    painter.drawText(rect(), Qt::AlignCenter, text);
+    if (displayMode == Dock::Efficient) {
+        painter.drawText(rect(), Qt::AlignCenter, text);
+    }else{
+        painter.drawImage(rect(), image);
+    }
 }
 
 void WeatherWidget::mousePressEvent(QMouseEvent *e)

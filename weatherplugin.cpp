@@ -1,5 +1,4 @@
 #include "weatherplugin.h"
-#include <QLabel>
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QMessageBox>
@@ -201,7 +200,7 @@ void WeatherPlugin::invokedMenuItem(const QString &itemKey, const QString &menuI
 
 void WeatherPlugin::MBAbout()
 {
-    QMessageBox aboutMB(QMessageBox::NoIcon, "天气预报 3.0", "关于\n\n深度Linux系统上一款在任务栏显示天气的插件。\n作者：黄颖\nE-mail: sonichy@163.com\n源码：https://github.com/sonichy/WEATHER_DDE_DOCK\n致谢：\nlinux028@deepin.org\n\n3.0 (2018-02-26)\n1.使用新版时间模板，解决右键点击崩溃问题，并支持任务栏开关。\n\n2.2 (2017-08-19)\n1.使用raise方法，使窗体顶置。\n\n2.1 (2017-01-24)\n1.使用本地图标代替边缘有白色的网络图标，以适用深度15.4 Dock的深色主题。\n2.修复右键菜单，可以使用了。\n\n2.0 (2016-12-08)\n点击Dock弹出窗口显示7天预报。\n\n1.0 (2016-11-09)\n在深度Dock栏显示天气，鼠标悬浮泡泡显示实时天气。");
+    QMessageBox aboutMB(QMessageBox::NoIcon, "天气预报 3.0", "关于\n\n深度Linux系统上一款在任务栏显示天气的插件。\n作者：黄颖\nE-mail: sonichy@163.com\n源码：https://github.com/sonichy/WEATHER_DDE_DOCK\n致谢：\nlinux028@deepin.org\n\n3.0 (2018-02-26)\n1.以新版 Dock 的 datetime 为模板重写，解决右键点击崩溃问题，并支持任务栏开关。\n\n2.2 (2017-08-19)\n1.使用raise方法，使窗体顶置。\n\n2.1 (2017-01-24)\n1.使用本地图标代替边缘有白色的网络图标，以适用深度15.4 Dock的深色主题。\n2.修复右键菜单，可以使用了。\n\n2.0 (2016-12-08)\n点击Dock弹出窗口显示7天预报。\n\n1.0 (2016-11-09)\n在深度Dock栏显示天气，鼠标悬浮泡泡显示实时天气。");
     aboutMB.setIconPixmap(QPixmap(":/images/0.png"));
     aboutMB.exec();
 }
@@ -289,7 +288,6 @@ void WeatherPlugin::updateWeather()
                 QJsonObject weatherinfoObj = it.value().toObject();
                 sw1 = weatherinfoObj.value("weather1").toString();
                 m_centralWidget->text = sw1 + "\n" + temp;
-                m_centralWidget->update();
                 QDateTime date = QDateTime::fromString(weatherinfoObj.value("date_y").toString(), "yyyy年M月d");
                 for(int i=1; i<8; i++) {
                     labelDate[i-1]->setText(date.addDays(i-1).toString("M-d")+"\n"+date.addDays(i-1).toString("dddd"));
@@ -300,10 +298,12 @@ void WeatherPlugin::updateWeather()
                     image.load(surl);
                     labelWImg[i-1]->setPixmap(QPixmap::fromImage(image.scaled(50,50)));
                     labelWImg[i-1]->setAlignment(Qt::AlignCenter);
+                    if(i==1) m_centralWidget->image = image;
 
                     labelWeather[i-1]->setText(weatherinfoObj.value("weather" + QString::number(i)).toString()+"\n"+weatherinfoObj.value("temp"+QString::number(i)).toString() + "\n" + weatherinfoObj.value("wind"+QString::number(i)).toString());
                     labelWeather[i-1]->setAlignment(Qt::AlignCenter);
                 }
+                m_centralWidget->update();
             }
         }
     }
