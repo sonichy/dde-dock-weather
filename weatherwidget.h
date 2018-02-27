@@ -12,7 +12,7 @@ public:
     explicit WeatherWidget(QWidget *parent = 0);
     bool enabled();
     void setEnabled(const bool b);
-    QString text;
+    QString sw1, temp;
     QImage image;
 
 signals:

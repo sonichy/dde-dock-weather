@@ -287,7 +287,8 @@ void WeatherPlugin::updateWeather()
                 it = obj.find("weatherinfo");
                 QJsonObject weatherinfoObj = it.value().toObject();
                 sw1 = weatherinfoObj.value("weather1").toString();
-                m_centralWidget->text = sw1 + "\n" + temp;
+                m_centralWidget->sw1 = sw1;
+                m_centralWidget->temp = temp;
                 QDateTime date = QDateTime::fromString(weatherinfoObj.value("date_y").toString(), "yyyy年M月d");
                 for(int i=1; i<8; i++) {
                     labelDate[i-1]->setText(date.addDays(i-1).toString("M-d")+"\n"+date.addDays(i-1).toString("dddd"));
@@ -300,7 +301,7 @@ void WeatherPlugin::updateWeather()
                     labelWImg[i-1]->setAlignment(Qt::AlignCenter);
                     if(i==1) m_centralWidget->image = image;
 
-                    labelWeather[i-1]->setText(weatherinfoObj.value("weather" + QString::number(i)).toString()+"\n"+weatherinfoObj.value("temp"+QString::number(i)).toString() + "\n" + weatherinfoObj.value("wind"+QString::number(i)).toString());
+                    labelWeather[i-1]->setText(weatherinfoObj.value("weather" + QString::number(i)).toString() + "\n" + weatherinfoObj.value("temp"+QString::number(i)).toString() + "\n" + weatherinfoObj.value("wind"+QString::number(i)).toString());
                     labelWeather[i-1]->setAlignment(Qt::AlignCenter);
                 }
                 m_centralWidget->update();
@@ -308,5 +309,5 @@ void WeatherPlugin::updateWeather()
         }
     }
 
-    m_tipsLabel->setText(city + "\n" + sw1 + "\n" + swtips);
+    m_tipsLabel->setText(QString::number(m_centralWidget->width()) + "\n" + city + "\n" + sw1 + "\n" + swtips);
 }
