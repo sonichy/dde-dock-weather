@@ -309,5 +309,5 @@ void WeatherPlugin::updateWeather()
         }
     }
 
-    m_tipsLabel->setText(QString::number(m_centralWidget->width()) + "\n" + city + "\n" + sw1 + "\n" + swtips);
+    m_tipsLabel->setText(city + "\n" + sw1 + "\n" + swtips);
 }
