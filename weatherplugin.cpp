@@ -261,6 +261,7 @@ void WeatherPlugin::updateWeather()
                 QJsonObject weatherinfoObj = it.value().toObject();
                 swtips = weatherinfoObj.value("temp").toString() + "°C\n湿度：" + weatherinfoObj.value("SD").toString() + "\n" + weatherinfoObj.value("WD").toString() + weatherinfoObj.value("WS").toString() + "\nPM2.5：" + weatherinfoObj.value("pm25").toString() + "\n空气质量指数："+ QString::number(weatherinfoObj.value("aqiLevel").toInt()) + "\n刷新：" + currentDateTime.toString("HH:mm:ss");
                 temp = weatherinfoObj.value("temp").toString() + "°C";
+                m_centralWidget->temp = temp;
                 labelTemp->setText(weatherinfoObj.value("temp").toString() + "°C");
                 labelSD->setText("湿度\n" + weatherinfoObj.value("SD").toString());
                 labelWind->setText(weatherinfoObj.value("WD").toString() + "\n" + weatherinfoObj.value("WS").toString());
@@ -288,7 +289,6 @@ void WeatherPlugin::updateWeather()
                 QJsonObject weatherinfoObj = it.value().toObject();
                 sw1 = weatherinfoObj.value("weather1").toString();
                 m_centralWidget->sw1 = sw1;
-                m_centralWidget->temp = temp;
                 QDateTime date = QDateTime::fromString(weatherinfoObj.value("date_y").toString(), "yyyy年M月d");
                 for(int i=1; i<8; i++) {
                     labelDate[i-1]->setText(date.addDays(i-1).toString("M-d")+"\n"+date.addDays(i-1).toString("dddd"));
