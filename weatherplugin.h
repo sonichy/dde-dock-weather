@@ -41,8 +41,8 @@ private:
     QPointer<WeatherWidget> m_centralWidget;
     QPointer<QLabel> m_tipsLabel;
     QTimer *m_refershTimer;
-    QString city, cityId, swtips, temp, sw1;
-    QLabel *labelTemp, *labelCity, *labelSD, *labelWind, *labelPM, *labelAQI, *labelRT, *labelDate[7], *labelWImg[7], *labelWeather[7];
+    QString city, cityID, swtips, temp, sw1;
+    QLabel *labelTemp, *labelCity, *labelSD, *labelWind, *labelPM, *labelAQI, *labelRT, *labelDate[7], *labelWImg[7], *labelWeather[7], *labelComment;
     QGridLayout *layout;
     void MBAbout();
     QWidget *window;
