@@ -33,9 +33,9 @@ QSize WeatherWidget::sizeHint() const
     const Dock::DisplayMode displayMode = qApp->property(PROP_DISPLAY_MODE).value<Dock::DisplayMode>();
     if (displayMode == Dock::Efficient) {
         if(FM.boundingRect(sw1).width() >= FM.boundingRect(temp).width()){
-            size = FM.boundingRect(sw1).size();
+            size = FM.boundingRect(sw1).size() + QSize(0,FM.boundingRect(sw1).height());
         }else{
-            size = FM.boundingRect(temp).size();
+            size = FM.boundingRect(temp).size() + QSize(0,FM.boundingRect(temp).height());
         }
     }else{
         FM.boundingRect("天气").size();
