@@ -13,11 +13,13 @@ DISTFILES       += weather.json
 
 HEADERS += \
     weatherplugin.h \
-    weatherwidget.h
+    weatherwidget.h \
+    forcastwidget.h
 
 SOURCES += \
     weatherplugin.cpp \
-    weatherwidget.cpp
+    weatherwidget.cpp \
+    forcastwidget.cpp
 
 target.path = $${PREFIX}/lib/dde-dock/plugins/
 INSTALLS += target

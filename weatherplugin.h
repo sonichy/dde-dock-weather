@@ -3,6 +3,7 @@
 
 #include "pluginsiteminterface.h"
 #include "weatherwidget.h"
+#include "forcastwidget.h"
 #include <QTimer>
 #include <QLabel>
 #include <QGridLayout>
@@ -30,27 +31,22 @@ public:
     int itemSortKey(const QString &itemKey) override;
 
     QWidget *itemWidget(const QString &itemKey) override;
-    QWidget *itemTipsWidget(const QString &itemKey) override;
+    QWidget *itemTipsWidget(const QString &itemKey) override;    
+    QWidget *itemPopupApplet(const QString &itemKey);
 
-    const QString itemCommand(const QString &itemKey) override;
     const QString itemContextMenu(const QString &itemKey) override;
 
     void invokedMenuItem(const QString &itemKey, const QString &menuId, const bool checked) override;
 
 private slots:
-    void updateWeather();
+    void weatherNow(QString weather, QString temp, QString stip, QPixmap pixmap);
 
 private:    
     QPointer<WeatherWidget> m_centralWidget;
     QPointer<QLabel> m_tipsLabel;
     QTimer *m_refershTimer;
-    QString city, stip, temp, sw;
-    QLabel *labelCity, *labelRT, *labelDate[6], *labelWImg[6], *labelTemp[6];
-    QGridLayout *layout;
     void MBAbout();
-    //QWidget *forcastWidget;
-    DBlurEffectWidget *forcastWidget;
-    QString translateWeather(QString s);
+    ForcastWidget *forcastApplet;
 };
 
 #endif // WEATHERPlugin_H
