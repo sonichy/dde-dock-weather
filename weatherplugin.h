@@ -6,6 +6,9 @@
 #include <QTimer>
 #include <QLabel>
 #include <QGridLayout>
+#include <DBlurEffectWidget>
+
+DWIDGET_USE_NAMESPACE
 
 class WeatherPlugin : public QObject, PluginsItemInterface
 {
@@ -41,11 +44,13 @@ private:
     QPointer<WeatherWidget> m_centralWidget;
     QPointer<QLabel> m_tipsLabel;
     QTimer *m_refershTimer;
-    QString city, cityID, swtips, temp, sw1;
-    QLabel *labelTemp, *labelCity, *labelSD, *labelWind, *labelPM, *labelAQI, *labelRT, *labelDate[7], *labelWImg[7], *labelWeather[7], *labelComment;
+    QString city, stip, temp, sw;
+    QLabel *labelCity, *labelRT, *labelDate[6], *labelWImg[6], *labelTemp[6];
     QGridLayout *layout;
     void MBAbout();
-    QWidget *window;
+    //QWidget *forcastWidget;
+    DBlurEffectWidget *forcastWidget;
+    QString translateWeather(QString s);
 };
 
 #endif // WEATHERPlugin_H

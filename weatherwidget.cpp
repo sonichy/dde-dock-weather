@@ -12,7 +12,7 @@ WeatherWidget::WeatherWidget(QWidget *parent)
     : QWidget(parent),
     m_settings("deepin", "dde-dock-weather")
 {
-    sw1 = "天气";
+    sw = "天气";
     temp = "温度";
 }
 
@@ -32,8 +32,8 @@ QSize WeatherWidget::sizeHint() const
     QSize size;
     const Dock::DisplayMode displayMode = qApp->property(PROP_DISPLAY_MODE).value<Dock::DisplayMode>();
     if (displayMode == Dock::Efficient) {
-        if(FM.boundingRect(sw1).width() >= FM.boundingRect(temp).width()){
-            size = FM.boundingRect(sw1).size() + QSize(0,FM.boundingRect(sw1).height());
+        if(FM.boundingRect(sw).width() >= FM.boundingRect(temp).width()){
+            size = FM.boundingRect(sw).size() + QSize(0,FM.boundingRect(sw).height());
         }else{
             size = FM.boundingRect(temp).size() + QSize(0,FM.boundingRect(temp).height());
         }
@@ -56,9 +56,10 @@ void WeatherWidget::paintEvent(QPaintEvent *e)
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setPen(Qt::white);
     if (displayMode == Dock::Efficient) {
-        painter.drawText(rect(), Qt::AlignCenter, sw1 + "\n" + temp);
-    }else{
-        painter.drawImage(rect(), image);
+        painter.drawText(rect(), Qt::AlignCenter, sw + "\n" + temp);
+    } else {
+        //painter.drawImage(rect(), image);
+        painter.drawPixmap(rect(), pixmap);
     }
 }
 

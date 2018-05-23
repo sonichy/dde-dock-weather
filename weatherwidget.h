@@ -12,8 +12,8 @@ public:
     explicit WeatherWidget(QWidget *parent = 0);
     bool enabled();
     void setEnabled(const bool b);
-    QString sw1, temp;
-    QImage image;
+    QString sw, temp;
+    QPixmap pixmap;
 
 signals:
     void requestUpdateGeometry() const;
