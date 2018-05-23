@@ -114,7 +114,7 @@ QWidget *WeatherPlugin::itemTipsWidget(const QString &itemKey)
 const QString WeatherPlugin::itemCommand(const QString &itemKey)
 {
     Q_UNUSED(itemKey);
-    forcastWidget->move(QApplication::desktop()->width() - forcastWidget->width(), QApplication::desktop()->height() - forcastWidget->height() -50);
+    forcastWidget->move(QApplication::desktop()->width() - forcastWidget->width() - 5, QApplication::desktop()->height() - forcastWidget->height() -50);
     forcastWidget->show();
     forcastWidget->raise();
     return "";
@@ -159,7 +159,7 @@ void WeatherPlugin::invokedMenuItem(const QString &itemKey, const QString &menuI
         MBAbout();
         break;
     case 1:
-        forcastWidget->move(QApplication::desktop()->width() - forcastWidget->width(), QApplication::desktop()->height() - forcastWidget->height() - 50);
+        forcastWidget->move(QApplication::desktop()->width() - forcastWidget->width()- 5, QApplication::desktop()->height() - forcastWidget->height() - 50);
         forcastWidget->show();
         forcastWidget->raise();
         break;
