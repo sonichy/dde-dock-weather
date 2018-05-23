@@ -1,7 +1,7 @@
 # DDE_Dock_Weather
 深度 Linux 系统天气任务栏插件。  
 安装：终端 ./install.sh  
-卸载：终端 ./uninstall.sh
+卸载：终端 ./uninstall.sh  
 ![alt](preview.png)  
 ![alt](FashionMode.png)  
 ### 4.0 (2018-05-23)
