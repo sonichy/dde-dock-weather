@@ -44,9 +44,10 @@ private slots:
 private:    
     QPointer<WeatherWidget> m_centralWidget;
     QPointer<QLabel> m_tipsLabel;
-    QTimer *m_refershTimer;
-    void MBAbout();
+    QTimer *m_refershTimer;    
     ForcastWidget *forcastApplet;
+    void MBAbout();
+    void showSatalite();
 };
 
 #endif // WEATHERPlugin_H

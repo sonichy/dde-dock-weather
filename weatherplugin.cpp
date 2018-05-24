@@ -97,11 +97,11 @@ const QString WeatherPlugin::itemContextMenu(const QString &itemKey)
     about["isActive"] = true;
     items.push_back(about);
 
-//    QMap<QString, QVariant> forecast;
-//    forecast["itemId"] = "forecast";
-//    forecast["itemText"] = "预报";
-//    forecast["isActive"] = true;
-//    items.push_back(forecast);
+    QMap<QString, QVariant> satalite;
+    satalite["itemId"] = "satalite";
+    satalite["itemText"] = "卫星云图";
+    satalite["isActive"] = true;
+    items.push_back(satalite);
 
     QMap<QString, QVariant> menu;
     menu["items"] = items;
@@ -116,11 +116,14 @@ void WeatherPlugin::invokedMenuItem(const QString &itemKey, const QString &menuI
     Q_UNUSED(checked)
 
     QStringList menuitems;
-    menuitems << "about";
+    menuitems << "about" << "satalite";
 
     switch(menuitems.indexOf(menuId)){
     case 0:
         MBAbout();
+        break;
+    case 1:
+        showSatalite();
         break;
     }
 }
@@ -138,4 +141,26 @@ void WeatherPlugin::weatherNow(QString weather, QString temp, QString stip, QPix
     m_centralWidget->temp = temp;
     m_centralWidget->pixmap = pixmap;
     m_tipsLabel->setText(stip);
+}
+
+void WeatherPlugin::showSatalite()
+{
+    QLabel *label = new QLabel;
+    label->setWindowTitle("卫星云图");
+    label->setWindowFlags(Qt::Tool);
+    QString surl = "http://61.187.56.156/pic/zuixinyt/zuixinhw.png";
+    QUrl url(surl);
+    QNetworkAccessManager manager;
+    QEventLoop loop;
+    QNetworkReply *reply;
+    reply = manager.get(QNetworkRequest(url));
+    connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+    loop.exec();
+    QByteArray BA = reply->readAll();
+    QPixmap pixmap;
+    pixmap.loadFromData(BA);
+    label->resize(pixmap.size());
+    label->move((QApplication::desktop()->width() - label->width())/2, (QApplication::desktop()->height() - label->height())/2);
+    label->setPixmap(pixmap);
+    label->show();
 }
