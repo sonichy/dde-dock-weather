@@ -53,12 +53,12 @@ void WeatherWidget::paintEvent(QPaintEvent *e)
     Q_UNUSED(e);
     const Dock::DisplayMode displayMode = qApp->property(PROP_DISPLAY_MODE).value<Dock::DisplayMode>();
     QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
     painter.setPen(Qt::white);
     if (displayMode == Dock::Efficient) {
         painter.drawText(rect(), Qt::AlignCenter, sw + "\n" + temp);
-    } else {
-        //painter.drawImage(rect(), image);
+    } else {        
         painter.drawPixmap(rect(), pixmap);
     }
 }
