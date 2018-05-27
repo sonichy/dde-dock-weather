@@ -2,6 +2,7 @@
 深度 Linux 系统天气任务栏插件。  
 安装：终端 ./install.sh  
 卸载：终端 ./uninstall.sh  
+日志：~/.cache/deepin/dde-dock/weather.log  
 ![alt](preview.png)  
 ![alt](FashionMode.png)  
 ### 4.1 (2018-05-23)

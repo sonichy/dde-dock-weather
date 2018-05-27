@@ -101,7 +101,7 @@ void ForcastWidget::updateWeather()
     qDebug() << surl;
     qDebug() << BA;
     log += surl + "\n";
-    log += BA + "\n";
+    log += BA;
     JD = QJsonDocument::fromJson(BA, &JPE);
     if (JPE.error == QJsonParseError::NoError) {
         if (JD.isArray()) {
@@ -129,10 +129,11 @@ void ForcastWidget::updateWeather()
     }
 
     // 写log
-    QString path = QStandardPaths::standardLocations(QStandardPaths::CacheLocation).first() + "/deepin/dde-dock/weather.log";
+    QString path = QStandardPaths::standardLocations(QStandardPaths::CacheLocation).first() + "/weather.log";
+    qDebug() << path;
     QFile file(path);
     if (file.open(QFile::WriteOnly)) {
-        file.write(log.toLatin1());
+        file.write(log.toUtf8());
         file.close();
     }
 
