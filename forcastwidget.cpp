@@ -5,6 +5,8 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonParseError>
+#include <QFile>
+#include <QStandardPaths>
 
 ForcastWidget::ForcastWidget(QWidget *parent)
     : QWidget(parent)
@@ -37,7 +39,9 @@ ForcastWidget::ForcastWidget(QWidget *parent)
 
 void ForcastWidget::updateWeather()
 {
+    QDateTime currentDateTime = QDateTime::currentDateTime();
     QString city = "",sw="",temp="",stip="",latitude="", longitude="";
+    QString log = currentDateTime.toString("yyyy/MM/dd HH:mm:ss") + "\n";
 
     // IP转城市名
     QString surl = "http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json";
@@ -51,6 +55,8 @@ void ForcastWidget::updateWeather()
     QByteArray BA = reply->readAll();
     qDebug() << surl ;
     qDebug() << BA;
+    log += surl + "\n";
+    log += BA + "\n";
     QJsonParseError JPE;
     QJsonDocument JD = QJsonDocument::fromJson(BA, &JPE);
     if (JPE.error == QJsonParseError::NoError) {
@@ -72,8 +78,10 @@ void ForcastWidget::updateWeather()
     QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
     loop.exec();
     BA = reply->readAll();
-    qDebug() << surl ;
+    qDebug() << surl;
     qDebug() << BA;
+    log += surl + "\n";
+    log += BA + "\n";
     JD = QJsonDocument::fromJson(BA, &JPE);
     if (JPE.error == QJsonParseError::NoError) {
         if (JD.isArray()) {
@@ -92,6 +100,8 @@ void ForcastWidget::updateWeather()
     BA = reply->readAll();
     qDebug() << surl;
     qDebug() << BA;
+    log += surl + "\n";
+    log += BA + "\n";
     JD = QJsonDocument::fromJson(BA, &JPE);
     if (JPE.error == QJsonParseError::NoError) {
         if (JD.isArray()) {
@@ -105,8 +115,7 @@ void ForcastWidget::updateWeather()
                     temp = QString::number(JA[i].toObject().value("temperatureMin").toInt()) + "°C";
                     labelTemp[i]->setText(temp);
                     labelDate[i]->setText(city);
-                    sw = translateWeather(weatherName);
-                    QDateTime currentDateTime = QDateTime::currentDateTime();
+                    sw = translateWeather(weatherName);                    
                     stip = city + "\n" + sw + "\n" + temp + "\n刷新：" + currentDateTime.toString("HH:mm:ss");                    
                     emit weatherNow(sw, temp, stip, pixmap);
                 } else {
@@ -117,6 +126,14 @@ void ForcastWidget::updateWeather()
                 }
             }
         }
+    }
+
+    // 写log
+    QString path = QStandardPaths::standardLocations(QStandardPaths::CacheLocation).first() + "/deepin/dde-dock/weather.log";
+    QFile file(path);
+    if (file.open(QFile::WriteOnly)) {
+        file.write(log.toLatin1());
+        file.close();
     }
 
 }
