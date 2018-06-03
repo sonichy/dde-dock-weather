@@ -1,4 +1,4 @@
-#include "constants.h"
+#include "dde-dock/constants.h"
 #include "weatherwidget.h"
 #include <QApplication>
 #include <QPainter>

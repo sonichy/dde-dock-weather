@@ -1,7 +1,7 @@
 #ifndef WEATHERPlugin_H
 #define WEATHERPlugin_H
 
-#include "pluginsiteminterface.h"
+#include "dde-dock/pluginsiteminterface.h"
 #include "weatherwidget.h"
 #include "forcastwidget.h"
 #include <QTimer>
@@ -28,7 +28,8 @@ public:
     bool pluginIsAllowDisable() override { return true; }
     bool pluginIsDisable() override;
 
-    int itemSortKey(const QString &itemKey) override;
+    int itemSortKey(const QString &itemKey);
+    void setSortKey(const QString &itemKey, const int order);
 
     QWidget *itemWidget(const QString &itemKey) override;
     QWidget *itemTipsWidget(const QString &itemKey) override;    
@@ -44,7 +45,8 @@ private slots:
 private:    
     QPointer<WeatherWidget> m_centralWidget;
     QPointer<QLabel> m_tipsLabel;
-    QTimer *m_refershTimer;    
+    QTimer *m_refershTimer;
+    QSettings m_settings;
     ForcastWidget *forcastApplet;
     void MBAbout();
     void showSatalite();

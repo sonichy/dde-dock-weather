@@ -1,5 +1,5 @@
 
-include(../dde-dock/interfaces/interfaces.pri)
+#include(../dde-dock/interfaces/interfaces.pri)
 
 QT              += widgets svg network
 TEMPLATE         = lib

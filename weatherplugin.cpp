@@ -8,7 +8,8 @@
 WeatherPlugin::WeatherPlugin(QObject *parent)
     : QObject(parent),
       m_tipsLabel(new QLabel),
-      m_refershTimer(new QTimer(this))
+      m_refershTimer(new QTimer(this)),
+      m_settings("deepin", "dde-dock-weather")
 {    
     m_tipsLabel->setObjectName("weather");
     m_tipsLabel->setStyleSheet("color:white; padding:0px 3px;");
@@ -63,7 +64,17 @@ bool WeatherPlugin::pluginIsDisable()
 int WeatherPlugin::itemSortKey(const QString &itemKey)
 {
     Q_UNUSED(itemKey);
-    return -1;
+
+    const QString key = QString("pos_%1").arg(displayMode());
+    return m_settings.value(key, 0).toInt();
+}
+
+void WeatherPlugin::setSortKey(const QString &itemKey, const int order)
+{
+    Q_UNUSED(itemKey);
+
+    const QString key = QString("pos_%1").arg(displayMode());
+    m_settings.setValue(key, order);
 }
 
 QWidget *WeatherPlugin::itemWidget(const QString &itemKey)
@@ -130,7 +141,7 @@ void WeatherPlugin::invokedMenuItem(const QString &itemKey, const QString &menuI
 
 void WeatherPlugin::MBAbout()
 {
-    QMessageBox aboutMB(QMessageBox::NoIcon, "天气预报 4.2", "关于\n\n深度Linux系统上一款在任务栏显示天气的插件。\n作者：黄颖\nE-mail: sonichy@163.com\n源码：https://github.com/sonichy/WEATHER_DDE_DOCK\n致谢：\nlinux028@deepin.org");
+    QMessageBox aboutMB(QMessageBox::NoIcon, "天气预报 4.3", "关于\n\n深度Linux系统上一款在任务栏显示天气的插件。\n作者：黄颖\nE-mail: sonichy@163.com\n源码：https://github.com/sonichy/WEATHER_DDE_DOCK\n致谢：\nlinux028@deepin.org");
     aboutMB.setIconPixmap(QPixmap(":/icon/clear.svg"));
     aboutMB.exec();
 }
