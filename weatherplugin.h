@@ -50,6 +50,7 @@ private:
     ForcastWidget *forcastApplet;
     void MBAbout();
     void showSatalite();
+    void showLog();
 };
 
 #endif // WEATHERPlugin_H

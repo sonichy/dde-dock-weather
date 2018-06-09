@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QDesktopServices>
 
 WeatherPlugin::WeatherPlugin(QObject *parent)
     : QObject(parent),
@@ -114,6 +115,12 @@ const QString WeatherPlugin::itemContextMenu(const QString &itemKey)
     satalite["isActive"] = true;
     items.push_back(satalite);
 
+    QMap<QString, QVariant> log;
+    log["itemId"] = "log";
+    log["itemText"] = "日志";
+    log["isActive"] = true;
+    items.push_back(log);
+
     QMap<QString, QVariant> menu;
     menu["items"] = items;
     menu["checkableMenu"] = false;
@@ -127,7 +134,7 @@ void WeatherPlugin::invokedMenuItem(const QString &itemKey, const QString &menuI
     Q_UNUSED(checked)
 
     QStringList menuitems;
-    menuitems << "about" << "satalite";
+    menuitems << "about" << "satalite" << "log";
 
     switch(menuitems.indexOf(menuId)){
     case 0:
@@ -136,12 +143,15 @@ void WeatherPlugin::invokedMenuItem(const QString &itemKey, const QString &menuI
     case 1:
         showSatalite();
         break;
+    case 2:
+        showLog();
+        break;
     }
 }
 
 void WeatherPlugin::MBAbout()
 {
-    QMessageBox aboutMB(QMessageBox::NoIcon, "天气预报 4.4", "关于\n\n深度Linux系统上一款在任务栏显示天气的插件。\n作者：黄颖\nE-mail: sonichy@163.com\n源码：https://github.com/sonichy/WEATHER_DDE_DOCK\n致谢：linux028@deepin.org");
+    QMessageBox aboutMB(QMessageBox::NoIcon, "天气预报 4.5", "关于\n\n深度Linux系统上一款在任务栏显示天气的插件。\n作者：黄颖\nE-mail: sonichy@163.com\n源码：https://github.com/sonichy/WEATHER_DDE_DOCK\n致谢：linux028@deepin.org");
     aboutMB.setIconPixmap(QPixmap(":/icon/clear.svg"));
     aboutMB.exec();
 }
@@ -174,4 +184,10 @@ void WeatherPlugin::showSatalite()
     label->move((QApplication::desktop()->width() - label->width())/2, (QApplication::desktop()->height() - label->height())/2);
     label->setPixmap(pixmap);
     label->show();
+}
+
+void WeatherPlugin::showLog()
+{
+    QString surl = "file://" + QStandardPaths::standardLocations(QStandardPaths::CacheLocation).first() + "/weather.log";
+    QDesktopServices::openUrl(QUrl(surl));
 }

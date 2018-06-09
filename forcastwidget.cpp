@@ -40,7 +40,7 @@ ForcastWidget::ForcastWidget(QWidget *parent)
 void ForcastWidget::updateWeather()
 {
     QDateTime currentDateTime = QDateTime::currentDateTime();
-    QString city = "",sw="",temp="",stip="",latitude="", longitude="";
+    QString city = "", sw = "", temp = "", stip = "", latitude = "", longitude = "";
     QString log = currentDateTime.toString("yyyy/MM/dd HH:mm:ss") + "\n";
 
     // IP转城市名
