@@ -10,8 +10,8 @@
 
 ForcastWidget::ForcastWidget(QWidget *parent)
     : QWidget(parent)
-{    
-    setFixedSize(220,330);
+{
+    setFixedWidth(250);
 
     QGridLayout *layout = new QGridLayout;
     for (int i=0; i<6; i++) {
@@ -122,7 +122,7 @@ void ForcastWidget::updateWeather()
                     labelWImg[i]->setPixmap(QPixmap(fileName).scaled(40,40,Qt::KeepAspectRatio,Qt::SmoothTransformation));
                     labelTemp[i]->setText(QString::number(JA[i].toObject().value("temperatureMin").toInt()) + "~" + QString::number(JA[i].toObject().value("temperatureMax").toInt()) + "°C");
                     QDateTime date = QDateTime::fromTime_t(JA[i].toObject().value("date").toInt());
-                    labelDate[i]->setText(date.toString("M月d日"));
+                    labelDate[i]->setText(date.toString("M月d日 ddd"));
                 }
             }
         }
