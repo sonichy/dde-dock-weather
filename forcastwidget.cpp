@@ -91,7 +91,7 @@ void ForcastWidget::updateWeather()
     if(city.contains("省")){
         city = city.mid(city.indexOf("省") + 1, city.indexOf("市") -1 - city.indexOf("省"));
     }else{
-        city = city.left(city.indexOf("市")-1);
+        city = city.left(city.indexOf("市"));
     }
     //log += city + "\n";
 
