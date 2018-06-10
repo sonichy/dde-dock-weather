@@ -169,12 +169,11 @@ void WeatherPlugin::showSatalite()
     QLabel *label = new QLabel;
     label->setWindowTitle("卫星云图");
     label->setWindowFlags(Qt::Tool);
-    QString surl = "http://61.187.56.156/pic/zuixinyt/zuixinhw.png";
-    QUrl url(surl);
+    QString surl = "http://61.187.56.156/pic/zuixinyt/zuixinhw.png";    
     QNetworkAccessManager manager;
     QEventLoop loop;
     QNetworkReply *reply;
-    reply = manager.get(QNetworkRequest(url));
+    reply = manager.get(QNetworkRequest(QUrl(surl)));
     connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
     loop.exec();
     QByteArray BA = reply->readAll();

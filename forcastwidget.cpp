@@ -28,7 +28,7 @@ ForcastWidget::ForcastWidget(QWidget *parent)
             labelDate[i]->setStyleSheet("color:white;font-size:20px;");
         } else {
             labelTemp[i]->setStyleSheet("color:white;font-size:12px;");
-            labelDate[i] = new QLabel("1月1日");
+            labelDate[i] = new QLabel("1月1日 周一");
             labelDate[i]->setStyleSheet("color:white;font-size:12px;");
         }
         labelDate[i]->setAlignment(Qt::AlignCenter);
@@ -44,12 +44,12 @@ void ForcastWidget::updateWeather()
     QString log = currentDateTime.toString("yyyy/MM/dd HH:mm:ss") + "\n";
 
     // IP转城市名
-    QString surl = "http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json";
-    QUrl url(surl);
+    /*
+    QString surl = "http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json";    
     QNetworkAccessManager manager;
     QEventLoop loop;
     QNetworkReply *reply;
-    reply = manager.get(QNetworkRequest(url));
+    reply = manager.get(QNetworkRequest(QUrl(surl)));
     connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
     loop.exec();
     QByteArray BA = reply->readAll();
@@ -70,19 +70,43 @@ void ForcastWidget::updateWeather()
             }
         }
     }
+    */
+
+    QString surl = "http://ip.chinaz.com/getip.aspx";
+    QNetworkAccessManager manager;
+    QEventLoop loop;
+    QNetworkReply *reply;
+    reply = manager.get(QNetworkRequest(QUrl(surl)));
+    connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+    loop.exec();
+    QString s(reply->readAll());
+    qDebug() << surl ;
+    qDebug() << s;
+    log += surl + "\n";
+    log += s + "\n";
+    s = s.mid(s.indexOf(",") + 1);
+    //log += s + "\n";
+    city = s.mid(s.indexOf("'") + 1, s.length() - s.indexOf("'")  - (s.length() - s.lastIndexOf("'")) -1);
+    //log += city + "\n";
+    if(city.contains("省")){
+        city = city.mid(city.indexOf("省") + 1, city.indexOf("市") -1 - city.indexOf("省"));
+    }else{
+        city = city.left(city.indexOf("市")-1);
+    }
+    //log += city + "\n";
 
     // 根据城市名取经纬度
-    surl = "http://w.api.deepin.com/v1/location/" + city;
-    url.setUrl(surl);
-    reply = manager.get(QNetworkRequest(url));
+    surl = "http://w.api.deepin.com/v1/location/" + city;    
+    reply = manager.get(QNetworkRequest(QUrl(surl)));
     QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
     loop.exec();
-    BA = reply->readAll();
+    QByteArray BA = reply->readAll();
     qDebug() << surl;
     qDebug() << BA;
     log += surl + "\n";
     log += BA + "\n";
-    JD = QJsonDocument::fromJson(BA, &JPE);
+    QJsonParseError JPE;
+    QJsonDocument JD = QJsonDocument::fromJson(BA, &JPE);
     if (JPE.error == QJsonParseError::NoError) {
         if (JD.isArray()) {
             QJsonArray JA = JD.array();
@@ -92,9 +116,8 @@ void ForcastWidget::updateWeather()
     }
 
     // 根据经纬度取天气预报
-    surl = "http://w.api.deepin.com/v1/forecast/" + latitude + "/" + longitude;
-    url.setUrl(surl);
-    reply = manager.get(QNetworkRequest(url));
+    surl = "http://w.api.deepin.com/v1/forecast/" + latitude + "/" + longitude;    
+    reply = manager.get(QNetworkRequest(QUrl(surl)));
     QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
     loop.exec();
     BA = reply->readAll();
