@@ -109,6 +109,12 @@ const QString WeatherPlugin::itemContextMenu(const QString &itemKey)
     about["isActive"] = true;
     items.push_back(about);
 
+    QMap<QString, QVariant> refresh;
+    refresh["itemId"] = "refresh";
+    refresh["itemText"] = "刷新";
+    refresh["isActive"] = true;
+    items.push_back(refresh);
+
     QMap<QString, QVariant> satalite;
     satalite["itemId"] = "satalite";
     satalite["itemText"] = "卫星云图";
@@ -130,28 +136,24 @@ const QString WeatherPlugin::itemContextMenu(const QString &itemKey)
 
 void WeatherPlugin::invokedMenuItem(const QString &itemKey, const QString &menuId, const bool checked)
 {
-    Q_UNUSED(itemKey)
-    Q_UNUSED(checked)
+    Q_UNUSED(itemKey);
+    Q_UNUSED(checked);
 
-    QStringList menuitems;
-    menuitems << "about" << "satalite" << "log";
-
-    switch(menuitems.indexOf(menuId)){
-    case 0:
+    if(menuId=="about"){
         MBAbout();
-        break;
-    case 1:
+    }else if(menuId=="refresh"){
+        forcastApplet->updateWeather();
+    }else if(menuId=="satalite"){
         showSatalite();
-        break;
-    case 2:
+    }else if(menuId=="log"){
         showLog();
-        break;
     }
+
 }
 
 void WeatherPlugin::MBAbout()
 {
-    QMessageBox aboutMB(QMessageBox::NoIcon, "天气预报 4.5", "关于\n\n深度Linux系统上一款在任务栏显示天气的插件。\n作者：黄颖\nE-mail: sonichy@163.com\n源码：https://github.com/sonichy/WEATHER_DDE_DOCK\n致谢：linux028@deepin.org");
+    QMessageBox aboutMB(QMessageBox::NoIcon, "天气预报 4.6", "关于\n\n深度Linux系统上一款在任务栏显示天气的插件。\n作者：黄颖\nE-mail: sonichy@163.com\n源码：https://github.com/sonichy/WEATHER_DDE_DOCK");
     aboutMB.setIconPixmap(QPixmap(":/icon/clear.svg"));
     aboutMB.exec();
 }
