@@ -1,17 +1,18 @@
-#include "weatherplugin.h"
+﻿#include "weatherplugin.h"
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QMessageBox>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QDesktopServices>
+#include <QInputDialog>
 
 WeatherPlugin::WeatherPlugin(QObject *parent)
     : QObject(parent),
       m_tipsLabel(new QLabel),
       m_refershTimer(new QTimer(this)),
       m_settings("deepin", "dde-dock-weather")
-{    
+{
     m_tipsLabel->setObjectName("weather");
     m_tipsLabel->setStyleSheet("color:white; padding:0px 3px;");
 
@@ -65,7 +66,6 @@ bool WeatherPlugin::pluginIsDisable()
 int WeatherPlugin::itemSortKey(const QString &itemKey)
 {
     Q_UNUSED(itemKey);
-
     const QString key = QString("pos_%1").arg(displayMode());
     return m_settings.value(key, 0).toInt();
 }
@@ -109,6 +109,12 @@ const QString WeatherPlugin::itemContextMenu(const QString &itemKey)
     about["isActive"] = true;
     items.push_back(about);
 
+    QMap<QString, QVariant> set;
+    set["itemId"] = "set";
+    set["itemText"] = "设置";
+    set["isActive"] = true;
+    items.push_back(set);
+
     QMap<QString, QVariant> refresh;
     refresh["itemId"] = "refresh";
     refresh["itemText"] = "刷新";
@@ -141,8 +147,11 @@ void WeatherPlugin::invokedMenuItem(const QString &itemKey, const QString &menuI
 
     if(menuId=="about"){
         MBAbout();
+    }else if(menuId=="set"){
+        set();
     }else if(menuId=="refresh"){
         forcastApplet->updateWeather();
+        m_refershTimer->start();
     }else if(menuId=="satalite"){
         showSatalite();
     }else if(menuId=="log"){
@@ -153,7 +162,7 @@ void WeatherPlugin::invokedMenuItem(const QString &itemKey, const QString &menuI
 
 void WeatherPlugin::MBAbout()
 {
-    QMessageBox aboutMB(QMessageBox::NoIcon, "天气预报 4.6", "关于\n\n深度Linux系统上一款在任务栏显示天气的插件。\n作者：黄颖\nE-mail: sonichy@163.com\n源码：https://github.com/sonichy/WEATHER_DDE_DOCK");
+    QMessageBox aboutMB(QMessageBox::NoIcon, "天气预报 4.7", "关于\n\n深度Linux系统上一款在任务栏显示天气的插件。\n作者：黄颖\nE-mail: sonichy@163.com\n源码：https://github.com/sonichy/WEATHER_DDE_DOCK");
     aboutMB.setIconPixmap(QPixmap(":/icon/clear.svg"));
     aboutMB.exec();
 }
@@ -171,7 +180,7 @@ void WeatherPlugin::showSatalite()
     QLabel *label = new QLabel;
     label->setWindowTitle("卫星云图");
     label->setWindowFlags(Qt::Tool);
-    QString surl = "http://61.187.56.156/pic/zuixinyt/zuixinhw.png";    
+    QString surl = "http://61.187.56.156/pic/zuixinyt/zuixinhw.png";
     QNetworkAccessManager manager;
     QEventLoop loop;
     QNetworkReply *reply;
@@ -191,4 +200,14 @@ void WeatherPlugin::showLog()
 {
     QString surl = "file://" + QStandardPaths::standardLocations(QStandardPaths::CacheLocation).first() + "/weather.log";
     QDesktopServices::openUrl(QUrl(surl));
+}
+
+void WeatherPlugin::set()
+{
+    bool ok;
+    QString text = QInputDialog::getText(NULL, "自定义", "城市：", QLineEdit::Normal, m_settings.value("city","").toString(), &ok);
+    if(ok){
+        m_settings.setValue("city", text);
+        forcastApplet->updateWeather();
+    }
 }

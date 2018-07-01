@@ -19,14 +19,14 @@ signals:
     void requestUpdateGeometry() const;
     void requestContextMenu() const;
 
-public slots:    
+public slots:
 
 private:
     QSize sizeHint() const;
     void resizeEvent(QResizeEvent *e);
     void paintEvent(QPaintEvent *e);
-    void mousePressEvent(QMouseEvent *e);    
-    QSettings m_settings;    
+    void mousePressEvent(QMouseEvent *e);
+    QSettings m_settings;
 };
 
 #endif // WEATHERWIDGET_H

@@ -9,7 +9,8 @@
 #include <QStandardPaths>
 
 ForcastWidget::ForcastWidget(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      m_settings("deepin", "dde-dock-weather")
 {
     setFixedWidth(250);
 
@@ -40,12 +41,19 @@ ForcastWidget::ForcastWidget(QWidget *parent)
 void ForcastWidget::updateWeather()
 {
     QDateTime currentDateTime = QDateTime::currentDateTime();
-    QString city = "", sw = "", temp = "", stip = "", latitude = "", longitude = "";
+    QString city = "", sw = "", temp = "", stip = "", latitude = "", longitude = "", surl="";
     QString log = currentDateTime.toString("yyyy/MM/dd HH:mm:ss") + "\n";
+    QNetworkAccessManager manager;
+    QEventLoop loop;
+    QNetworkReply *reply;
 
+    QString setting_city = m_settings.value("city","").toString();
+    if(setting_city != ""){
+        city = setting_city;
+    }else{
     // IP转城市名
     /*
-    QString surl = "http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json";    
+    surl = "http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json";
     QNetworkAccessManager manager;
     QEventLoop loop;
     QNetworkReply *reply;
@@ -72,31 +80,29 @@ void ForcastWidget::updateWeather()
     }
     */
 
-    QString surl = "http://ip.chinaz.com/getip.aspx";
-    QNetworkAccessManager manager;
-    QEventLoop loop;
-    QNetworkReply *reply;
-    reply = manager.get(QNetworkRequest(QUrl(surl)));
-    connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
-    loop.exec();
-    QString s(reply->readAll());
-    qDebug() << surl ;
-    qDebug() << s;
-    log += surl + "\n";
-    log += s + "\n";
-    s = s.mid(s.indexOf(",") + 1);
-    //log += s + "\n";
-    city = s.mid(s.indexOf("'") + 1, s.length() - s.indexOf("'")  - (s.length() - s.lastIndexOf("'")) -1);
-    //log += city + "\n";
-    if(city.contains("省")){
-        city = city.mid(city.indexOf("省") + 1, city.indexOf("市") -1 - city.indexOf("省"));
-    }else{
-        city = city.left(city.indexOf("市"));
+        surl = "http://ip.chinaz.com/getip.aspx";
+        reply = manager.get(QNetworkRequest(QUrl(surl)));
+        connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+        loop.exec();
+        QString s(reply->readAll());
+        qDebug() << surl ;
+        qDebug() << s;
+        log += surl + "\n";
+        log += s + "\n";
+        s = s.mid(s.indexOf(",") + 1);
+        //log += s + "\n";
+        city = s.mid(s.indexOf("'") + 1, s.length() - s.indexOf("'")  - (s.length() - s.lastIndexOf("'")) -1);
+        //log += city + "\n";
+        if(city.contains("省")){
+            city = city.mid(city.indexOf("省") + 1, city.indexOf("市") -1 - city.indexOf("省"));
+        }else{
+            city = city.left(city.indexOf("市"));
+        }
+        //log += city + "\n";
     }
-    //log += city + "\n";
 
     // 根据城市名取经纬度
-    surl = "http://w.api.deepin.com/v1/location/" + city;    
+    surl = "http://w.api.deepin.com/v1/location/" + city;
     reply = manager.get(QNetworkRequest(QUrl(surl)));
     QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
     loop.exec();
@@ -116,7 +122,7 @@ void ForcastWidget::updateWeather()
     }
 
     // 根据经纬度取天气预报
-    surl = "http://w.api.deepin.com/v1/forecast/" + latitude + "/" + longitude;    
+    surl = "http://w.api.deepin.com/v1/forecast/" + latitude + "/" + longitude;
     reply = manager.get(QNetworkRequest(QUrl(surl)));
     QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
     loop.exec();
@@ -134,12 +140,12 @@ void ForcastWidget::updateWeather()
                 QString fileName = ":icon/" + weatherName.toLower() + ".svg";
                 if (i == 0) {
                     QPixmap pixmap(fileName);
-                    labelWImg[i]->setPixmap(pixmap.scaled(80,80,Qt::KeepAspectRatio,Qt::SmoothTransformation));                    
+                    labelWImg[i]->setPixmap(pixmap.scaled(80,80,Qt::KeepAspectRatio,Qt::SmoothTransformation));
                     temp = QString::number(JA[i].toObject().value("temperatureMin").toInt()) + "°C";
                     labelTemp[i]->setText(temp);
                     labelDate[i]->setText(city);
-                    sw = translateWeather(weatherName);                    
-                    stip = city + "\n" + sw + "\n" + temp + "\n刷新：" + currentDateTime.toString("HH:mm:ss");                    
+                    sw = translateWeather(weatherName);
+                    stip = city + "\n" + sw + "\n" + temp + "\n刷新：" + currentDateTime.toString("HH:mm:ss");
                     emit weatherNow(sw, temp, stip, pixmap);
                 } else {
                     labelWImg[i]->setPixmap(QPixmap(fileName).scaled(40,40,Qt::KeepAspectRatio,Qt::SmoothTransformation));

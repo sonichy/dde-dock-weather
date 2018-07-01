@@ -32,7 +32,7 @@ public:
     void setSortKey(const QString &itemKey, const int order);
 
     QWidget *itemWidget(const QString &itemKey) override;
-    QWidget *itemTipsWidget(const QString &itemKey) override;    
+    QWidget *itemTipsWidget(const QString &itemKey) override;
     QWidget *itemPopupApplet(const QString &itemKey);
 
     const QString itemContextMenu(const QString &itemKey) override;
@@ -42,7 +42,7 @@ public:
 private slots:
     void weatherNow(QString weather, QString temp, QString stip, QPixmap pixmap);
 
-private:    
+private:
     QPointer<WeatherWidget> m_centralWidget;
     QPointer<QLabel> m_tipsLabel;
     QTimer *m_refershTimer;
@@ -51,6 +51,7 @@ private:
     void MBAbout();
     void showSatalite();
     void showLog();
+    void set();
 };
 
 #endif // WEATHERPlugin_H
