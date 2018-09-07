@@ -14,6 +14,7 @@ WeatherWidget::WeatherWidget(QWidget *parent)
 {
     sw = "天气";
     temp = "温度";
+    pixmap = QPixmap(":icon/na.png");
 }
 
 bool WeatherWidget::enabled()
@@ -44,7 +45,7 @@ QSize WeatherWidget::sizeHint() const
 }
 
 void WeatherWidget::resizeEvent(QResizeEvent *e)
-{    
+{
     QWidget::resizeEvent(e);
 }
 
@@ -58,7 +59,7 @@ void WeatherWidget::paintEvent(QPaintEvent *e)
     painter.setPen(Qt::white);
     if (displayMode == Dock::Efficient) {
         painter.drawText(rect(), Qt::AlignCenter, sw + "\n" + temp);
-    } else {        
+    } else {
         painter.drawPixmap(rect(), pixmap);
     }
 }

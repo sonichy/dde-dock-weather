@@ -7,5 +7,6 @@
         <file>icon/clouds.svg</file>
         <file>icon/clear.svg</file>
         <file>icon/atmosphere.svg</file>
+        <file>icon/na.png</file>
     </qresource>
 </RCC>
