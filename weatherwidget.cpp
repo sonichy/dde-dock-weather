@@ -14,7 +14,7 @@ WeatherWidget::WeatherWidget(QWidget *parent)
 {
     sw = "天气";
     temp = "温度";
-    pixmap = QPixmap(":icon/na.png");
+    pixmap = QPixmap(":icon/NA.png");
 }
 
 bool WeatherWidget::enabled()
@@ -33,7 +33,7 @@ QSize WeatherWidget::sizeHint() const
     QSize size;
     const Dock::DisplayMode displayMode = qApp->property(PROP_DISPLAY_MODE).value<Dock::DisplayMode>();
     if (displayMode == Dock::Efficient) {
-        if(FM.boundingRect(sw).width() >= FM.boundingRect(temp).width()){
+        if(FM.boundingRect(sw + "  ").width() >= FM.boundingRect(temp + "  ").width()){
             size = FM.boundingRect(sw).size() + QSize(0,FM.boundingRect(sw).height());
         }else{
             size = FM.boundingRect(temp).size() + QSize(0,FM.boundingRect(temp).height());
@@ -58,7 +58,7 @@ void WeatherWidget::paintEvent(QPaintEvent *e)
     painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
     painter.setPen(Qt::white);
     if (displayMode == Dock::Efficient) {
-        painter.drawText(rect(), Qt::AlignCenter, sw + "\n" + temp);
+        painter.drawText(rect(), Qt::AlignCenter, " " +sw + "\n " + temp);
     } else {
         painter.drawPixmap(rect(), pixmap);
     }
