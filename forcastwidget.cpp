@@ -131,14 +131,16 @@ void ForcastWidget::updateWeather()
                 labelTemp[i+1]->setAlignment(Qt::AlignCenter);
                 labelDate[i+1]->setText(JA_forecast[i].toObject().value("date").toString());
                 labelDate[i+1]->setAlignment(Qt::AlignCenter);
-                QString icon_path = ":/icon/" + JA_forecast[i].toObject().value("type").toString() + ".png";
+                QString wtype = JA_forecast[i].toObject().value("type").toString();
+                QString icon_path = ":/icon/" + wtype + ".png";
                 QPixmap pixmap(icon_path);
-                if(i==0){
+                if(i == 0){
                     pixmap0 = pixmap;
-                    sw0 = JA_forecast[i].toObject().value("type").toString();
+                    sw0 = wtype;
                     labelWImg[i]->setPixmap(pixmap.scaled(60,60));
                     labelWImg[i]->setAlignment(Qt::AlignCenter);
                 }
+                labelWImg[i+1]->setToolTip(wtype);
                 labelWImg[i+1]->setPixmap(pixmap.scaled(40,40));
                 labelWImg[i+1]->setAlignment(Qt::AlignCenter);
             }

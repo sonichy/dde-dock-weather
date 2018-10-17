@@ -1,12 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>icon/thunderstorm.svg</file>
-        <file>icon/snow.svg</file>
-        <file>icon/rain.svg</file>
-        <file>icon/drizzle.svg</file>
-        <file>icon/clouds.svg</file>
-        <file>icon/clear.svg</file>
-        <file>icon/atmosphere.svg</file>
         <file>icon/NA.png</file>
         <file>icon/晴.png</file>
         <file>icon/阴.png</file>
@@ -14,5 +7,7 @@
         <file>icon/多云.png</file>
         <file>icon/中雨.png</file>
         <file>icon/小雨.png</file>
+        <file>icon/阵雨.png</file>
+        <file>icon/雪.png</file>
     </qresource>
 </RCC>
