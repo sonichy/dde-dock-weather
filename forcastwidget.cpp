@@ -127,19 +127,20 @@ void ForcastWidget::updateWeather()
             QPixmap pixmap0;
             QJsonArray JA_forecast = JO_data.value("forecast").toArray();
             for (int i=0; i<JA_forecast.size(); i++) {
-                labelTemp[i+1]->setText(JA_forecast[i].toObject().value("high").toString().replace("高温","").replace("℃","").replace(" ","") + " ~ " + JA_forecast[i].toObject().value("low").toString().replace("低温","").replace(" ",""));
-                labelTemp[i+1]->setAlignment(Qt::AlignCenter);
-                labelDate[i+1]->setText(JA_forecast[i].toObject().value("date").toString());
-                labelDate[i+1]->setAlignment(Qt::AlignCenter);
                 QString wtype = JA_forecast[i].toObject().value("type").toString();
                 QString icon_path = ":/icon/" + wtype + ".png";
                 QPixmap pixmap(icon_path);
                 if(i == 0){
                     pixmap0 = pixmap;
                     sw0 = wtype;
+                    labelWImg[i]->setToolTip(wtype);
                     labelWImg[i]->setPixmap(pixmap.scaled(60,60));
                     labelWImg[i]->setAlignment(Qt::AlignCenter);
                 }
+                labelTemp[i+1]->setText(wtype + " " + JA_forecast[i].toObject().value("high").toString().replace("高温","").replace("℃","").replace(" ","") + " ~ " + JA_forecast[i].toObject().value("low").toString().replace("低温","").replace(" ",""));
+                labelTemp[i+1]->setAlignment(Qt::AlignCenter);
+                labelDate[i+1]->setText(JA_forecast[i].toObject().value("date").toString());
+                labelDate[i+1]->setAlignment(Qt::AlignCenter);
                 labelWImg[i+1]->setToolTip(wtype);
                 labelWImg[i+1]->setPixmap(pixmap.scaled(40,40));
                 labelWImg[i+1]->setAlignment(Qt::AlignCenter);
@@ -160,25 +161,4 @@ void ForcastWidget::updateWeather()
         file.close();
     }
 
-}
-
-QString ForcastWidget::translateWeather(QString s)
-{
-    QString sc = "";
-    if(s == "Atmosphere"){
-        return "霾";
-    } else if (s == "Clear") {
-        return "晴";
-    } else if (s == "Clouds") {
-        return "多云";
-    } else if (s == "Drizzle") {
-        return "毛毛雨";
-    } else if (s == "Rain") {
-        return "雨";
-    } else if (s == "Snow") {
-        return "雪";
-    } else if (s == "Thunderstorm") {
-        return "雷雨";
-    }
-    return sc;
 }
