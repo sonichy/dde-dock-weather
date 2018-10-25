@@ -137,7 +137,7 @@ void ForcastWidget::updateWeather()
                     labelWImg[i]->setPixmap(pixmap.scaled(60,60));
                     labelWImg[i]->setAlignment(Qt::AlignCenter);
                 }
-                labelTemp[i+1]->setText(wtype + " " + JA_forecast[i].toObject().value("high").toString().replace("高温","").replace("℃","").replace(" ","") + " ~ " + JA_forecast[i].toObject().value("low").toString().replace("低温","").replace(" ",""));
+                labelTemp[i+1]->setText(wtype + " " + JA_forecast[i].toObject().value("low").toString().replace("低温","").replace("℃","").replace(" ","") + " ~ " + JA_forecast[i].toObject().value("high").toString().replace("高温","").replace(" ",""));
                 labelTemp[i+1]->setAlignment(Qt::AlignCenter);
                 labelDate[i+1]->setText(JA_forecast[i].toObject().value("date").toString());
                 labelDate[i+1]->setAlignment(Qt::AlignCenter);
