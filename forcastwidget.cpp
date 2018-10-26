@@ -8,6 +8,19 @@
 #include <QFile>
 #include <QStandardPaths>
 
+// <中文，英文>
+static const QMap<QString, QString> weatherMap {
+    {"NA", "NA"},
+    {"晴", "sunny"},
+    {"阴", "cloudy"},
+    {"雪", "snowy"},
+    {"阵雨", "shower"},
+    {"小雨", "drizzle"},
+    {"中雨", "rain1"},
+    {"大雨", "rain2"},
+    {"多云", "atmosphere"},
+};
+
 ForcastWidget::ForcastWidget(QWidget *parent)
     : QWidget(parent),
       m_settings("deepin", "dde-dock-weather")
@@ -128,7 +141,7 @@ void ForcastWidget::updateWeather()
             QJsonArray JA_forecast = JO_data.value("forecast").toArray();
             for (int i=0; i<JA_forecast.size(); i++) {
                 QString wtype = JA_forecast[i].toObject().value("type").toString();
-                QString icon_path = ":/icon/" + wtype + ".png";
+                QString icon_path = ":/icon/" + weatherMap[wtype] + ".png";
                 QPixmap pixmap(icon_path);
                 if(i == 0){
                     pixmap0 = pixmap;
