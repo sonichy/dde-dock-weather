@@ -1,13 +1,13 @@
 <RCC>
     <qresource prefix="/">
         <file>icon/NA.png</file>
-        <file>icon/晴.png</file>
-        <file>icon/阴.png</file>
-        <file>icon/大雨.png</file>
-        <file>icon/多云.png</file>
-        <file>icon/中雨.png</file>
-        <file>icon/小雨.png</file>
-        <file>icon/阵雨.png</file>
-        <file>icon/雪.png</file>
+        <file>icon/atmosphere.png</file>
+        <file>icon/shower.png</file>
+        <file>icon/rain1.png</file>
+        <file>icon/sunny.png</file>
+        <file>icon/drizzle.png</file>
+        <file>icon/rain2.png</file>
+        <file>icon/snowy.png</file>
+        <file>icon/cloudy.png</file>
     </qresource>
 </RCC>
