@@ -147,16 +147,16 @@ void WeatherPlugin::invokedMenuItem(const QString &itemKey, const QString &menuI
     Q_UNUSED(itemKey);
     Q_UNUSED(checked);
 
-    if(menuId=="about"){
+    if(menuId == "about"){
         MBAbout();
-    }else if(menuId=="set"){
+    }else if(menuId == "set"){
         set();
-    }else if(menuId=="refresh"){
+    }else if(menuId == "refresh"){
         forcastApplet->updateWeather();
         m_refershTimer->start();
-    }else if(menuId=="satalite"){
+    }else if(menuId == "satalite"){
         showSatalite();
-    }else if(menuId=="log"){
+    }else if(menuId == "log"){
         showLog();
     }
 
@@ -165,7 +165,7 @@ void WeatherPlugin::invokedMenuItem(const QString &itemKey, const QString &menuI
 void WeatherPlugin::MBAbout()
 {
     QMessageBox aboutMB(QMessageBox::NoIcon, "天气预报 4.8.1", "关于\n深度Linux系统上一款在任务栏显示天气的插件。\n作者：黄颖\nE-mail: sonichy@163.com\n源码：https://github.com/sonichy/WEATHER_DDE_DOCK\n天气API：https://www.sojson.com/blog/305.html");
-    aboutMB.setIconPixmap(QPixmap(":/icon/clear.svg"));
+    aboutMB.setIconPixmap(QPixmap(":/icon/sunny.png"));
     aboutMB.exec();
 }
 
