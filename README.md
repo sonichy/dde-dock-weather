@@ -1,6 +1,6 @@
 # DDE_Dock_Weather
 深度 Linux 系统天气任务栏插件。  
-[安装包](../../release/)  
+[安装包](../../releases/)  
 安装：终端 ./install.sh  
 卸载：终端 ./uninstall.sh  
 日志：~/.cache/deepin/dde-dock/weather.log  
