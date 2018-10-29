@@ -14,7 +14,9 @@ WeatherPlugin::WeatherPlugin(QObject *parent)
       m_settings("deepin", "dde-dock-weather")
 {
     m_tipsLabel->setObjectName("weather");
-    m_tipsLabel->setStyleSheet("color:white; padding:0px 3px;");
+    m_tipsLabel->setStyleSheet("color:white; padding:0px 2px;");
+    m_tipsLabel->setFixedWidth(150);
+    m_tipsLabel->setWordWrap(true);
 
     m_centralWidget = new WeatherWidget;
     connect(m_centralWidget, &WeatherWidget::requestContextMenu, [this] { m_proxyInter->requestContextMenu(this, QString()); });
@@ -162,7 +164,7 @@ void WeatherPlugin::invokedMenuItem(const QString &itemKey, const QString &menuI
 
 void WeatherPlugin::MBAbout()
 {
-    QMessageBox aboutMB(QMessageBox::NoIcon, "天气预报 4.8", "关于\n深度Linux系统上一款在任务栏显示天气的插件。\n作者：黄颖\nE-mail: sonichy@163.com\n源码：https://github.com/sonichy/WEATHER_DDE_DOCK\n天气API：https://www.sojson.com/blog/305.html");
+    QMessageBox aboutMB(QMessageBox::NoIcon, "天气预报 4.8.1", "关于\n深度Linux系统上一款在任务栏显示天气的插件。\n作者：黄颖\nE-mail: sonichy@163.com\n源码：https://github.com/sonichy/WEATHER_DDE_DOCK\n天气API：https://www.sojson.com/blog/305.html");
     aboutMB.setIconPixmap(QPixmap(":/icon/clear.svg"));
     aboutMB.exec();
 }
