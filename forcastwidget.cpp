@@ -23,7 +23,7 @@ static const QMap<QString, QString> weatherMap {
 
 ForcastWidget::ForcastWidget(QWidget *parent)
     : QWidget(parent),
-      m_settings("deepin", "dde-dock-weather")
+      m_settings("deepin", "dde-dock-HTYWeather")
 {
     setFixedWidth(250);
     QGridLayout *layout = new QGridLayout;

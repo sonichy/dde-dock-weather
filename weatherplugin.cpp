@@ -11,9 +11,9 @@ WeatherPlugin::WeatherPlugin(QObject *parent)
     : QObject(parent),
       m_tipsLabel(new QLabel),
       m_refershTimer(new QTimer(this)),
-      m_settings("deepin", "dde-dock-weather")
+      m_settings("deepin", "dde-dock-HTYWeather")
 {
-    m_tipsLabel->setObjectName("weather");
+    m_tipsLabel->setObjectName("HTYWeather");
     m_tipsLabel->setStyleSheet("color:white; padding:0px 2px;");
     m_tipsLabel->setFixedWidth(150);
     m_tipsLabel->setWordWrap(true);
@@ -41,7 +41,7 @@ const QString WeatherPlugin::pluginName() const
 
 const QString WeatherPlugin::pluginDisplayName() const
 {
-    return "天气";
+    return "海天鹰天气";
 }
 
 void WeatherPlugin::init(PluginProxyInterface *proxyInter)
@@ -164,7 +164,7 @@ void WeatherPlugin::invokedMenuItem(const QString &itemKey, const QString &menuI
 
 void WeatherPlugin::MBAbout()
 {
-    QMessageBox aboutMB(QMessageBox::NoIcon, "天气预报 4.8.1", "关于\n深度Linux系统上一款在任务栏显示天气的插件。\n作者：黄颖\nE-mail: sonichy@163.com\n源码：https://github.com/sonichy/WEATHER_DDE_DOCK\n天气API：https://www.sojson.com/blog/305.html");
+    QMessageBox aboutMB(QMessageBox::NoIcon, "海天鹰天气预报 4.8.1", "关于\n深度Linux系统上一款在任务栏显示天气的插件。\n作者：黄颖\nE-mail: sonichy@163.com\n源码：https://github.com/sonichy/WEATHER_DDE_DOCK\n天气API：https://www.sojson.com/blog/305.html");
     aboutMB.setIconPixmap(QPixmap(":/icon/sunny.png"));
     aboutMB.exec();
 }
@@ -200,7 +200,7 @@ void WeatherPlugin::showSatalite()
 
 void WeatherPlugin::showLog()
 {
-    QString surl = "file://" + QStandardPaths::standardLocations(QStandardPaths::CacheLocation).first() + "/weather.log";
+    QString surl = "file://" + QStandardPaths::standardLocations(QStandardPaths::CacheLocation).first() + "/HTYWeather.log";
     QDesktopServices::openUrl(QUrl(surl));
 }
 

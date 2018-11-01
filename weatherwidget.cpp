@@ -10,7 +10,7 @@
 
 WeatherWidget::WeatherWidget(QWidget *parent)
     : QWidget(parent),
-    m_settings("deepin", "dde-dock-weather")
+    m_settings("deepin", "dde-dock-HTYWeather")
 {
     sw = "天气";
     temp = "温度";
