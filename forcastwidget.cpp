@@ -95,6 +95,10 @@ void ForcastWidget::updateWeather()
         }
     }
 
+    if(city.contains("(")){
+        city = city.right(city.length() - city.indexOf("(") -1);
+        if(city.contains(" ")) city = city.left(city.indexOf(" "));
+    }
     // 根据城市名取cityID
     surl = "http://hao.weidunewtab.com/tianqi/city.php?city=" + city;
     QUrl url(surl);
@@ -166,7 +170,7 @@ void ForcastWidget::updateWeather()
     }
 
     // 写log
-    QString path = QStandardPaths::standardLocations(QStandardPaths::CacheLocation).first() + "/weather.log";
+    QString path = QStandardPaths::standardLocations(QStandardPaths::CacheLocation).first() + "/HTYWeather.log";
     qDebug() << path;
     QFile file(path);
     if (file.open(QFile::WriteOnly)) {
