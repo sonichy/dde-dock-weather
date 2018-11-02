@@ -3,7 +3,7 @@
 [安装包](../../releases/)  
 安装：终端 ./install.sh  
 卸载：终端 ./uninstall.sh  
-日志：~/.cache/deepin/dde-dock/weather.log  
+日志：~/.cache/deepin/dde-dock/HTYWeather.log  
 ![alt](preview.png)  
 ![alt](FashionMode.png)  
 ### 4.8 (2018-10-15)
