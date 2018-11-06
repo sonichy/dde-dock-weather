@@ -60,7 +60,7 @@ void WeatherWidget::paintEvent(QPaintEvent *e)
     if (displayMode == Dock::Efficient) {
         painter.drawText(rect(), Qt::AlignCenter, " " +sw + "\n " + temp);
     } else {
-        painter.drawPixmap(rect(), pixmap);
+        painter.drawPixmap(rect(), pixmap.scaled(rect().size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
     }
 }
 
