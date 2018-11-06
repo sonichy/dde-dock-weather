@@ -169,7 +169,7 @@ void ForcastWidget::updateWeather()
                 stip = city + "\n" + sw0 + "\n" + wendu + "\n湿度：" + shidu + "\nPM2.5：" + pm25 + "\n空气质量：" + quality +"\n" + ganmao + "\n更新：" + SUT;
                 emit weatherNow(sw0, wendu, stip, pixmap0);
             } else {
-                stip = "状态：" + QString::number(JO.value("status").toInt()) + "\n" + JO.value("message").toString();
+                stip = "状态：" + QString::number(JO.value("status").toInt()) + "\n信息：" + JO.value("message").toString();
                 QPixmap pixmap;
                 emit weatherNow("", "", stip, pixmap);
             }
