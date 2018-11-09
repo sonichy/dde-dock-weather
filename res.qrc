@@ -9,5 +9,6 @@
         <file>icon/rain2.png</file>
         <file>icon/snowy.png</file>
         <file>icon/cloudy.png</file>
+        <file>cityID.txt</file>
     </qresource>
 </RCC>

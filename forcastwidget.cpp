@@ -100,21 +100,27 @@ void ForcastWidget::updateWeather()
         city = city.right(city.length() - city.indexOf("(") -1);
         if(city.contains(" ")) city = city.left(city.indexOf(" "));
     }
+    if(city.contains("市")) city = city.replace("市","");
+
     // 根据城市名取cityID
-    surl = "http://hao.weidunewtab.com/tianqi/city.php?city=" + city;
-    QUrl url(surl);
-    reply = manager.get(QNetworkRequest(url));
-    QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
-    loop.exec();
-    QString cityID = reply->readAll();
-    qDebug() << surl;
-    qDebug() << cityID;
-    log += surl + "\n";
-    log += cityID + "\n";
+    QString cityID = "";
+    QFile file(":/cityID.txt");
+    bool ok = file.open(QIODevice::ReadOnly);
+    if(ok){
+        QTextStream TS(&file);
+        QString s = TS.readAll();
+        file.close();
+        QStringList SL = s.split("\n");
+        QStringList SL1 = SL.filter(city);
+        if (!SL1.isEmpty()) cityID = SL1.first();
+        log += "Search " + city +" in cityID.txt => " + cityID + "\n";
+        cityID = cityID.mid(cityID.indexOf(",") + 1);
+    }
 
     // 根据cityID取天气预报
     surl = "http://t.weather.sojson.com/api/weather/city/"+ cityID;
-    url.setUrl(surl);
+    QUrl url(surl);
+    //url.setUrl(surl);
     reply = manager.get(QNetworkRequest(url));
     QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
     loop.exec();
@@ -179,7 +185,8 @@ void ForcastWidget::updateWeather()
     // 写log
     QString path = QStandardPaths::standardLocations(QStandardPaths::CacheLocation).first() + "/HTYWeather.log";
     qDebug() << path;
-    QFile file(path);
+    //QFile file(path);
+    file.setFileName(path);
     if (file.open(QFile::WriteOnly)) {
         file.write(log.toUtf8());
         file.close();
