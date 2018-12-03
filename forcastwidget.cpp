@@ -19,6 +19,7 @@ static const QMap<QString, QString> weatherMap {
     {"中雨", "rain1"},
     {"大雨", "rain2"},
     {"多云", "atmosphere"},
+    {"霾", "haze"}
 };
 
 ForcastWidget::ForcastWidget(QWidget *parent)
@@ -164,7 +165,7 @@ void ForcastWidget::updateWeather()
                     }
                     labelTemp[i+1]->setText(wtype + " " + JA_forecast[i].toObject().value("low").toString().replace("低温","").replace("℃","").replace(" ","") + " ~ " + JA_forecast[i].toObject().value("high").toString().replace("高温","").replace(" ",""));
                     labelTemp[i+1]->setAlignment(Qt::AlignCenter);
-                    labelDate[i+1]->setText(JA_forecast[i].toObject().value("date").toString());
+                    labelDate[i+1]->setText(JA_forecast[i].toObject().value("date").toString().replace("0","") + "日 " + JA_forecast[i].toObject().value("week").toString().replace("星期",""));
                     labelDate[i+1]->setAlignment(Qt::AlignCenter);
                     labelWImg[i+1]->setToolTip(wtype);
                     labelWImg[i+1]->setPixmap(pixmap.scaled(40,40));
