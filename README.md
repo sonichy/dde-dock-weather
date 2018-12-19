@@ -1,5 +1,6 @@
 # DDE_Dock_Weather
 Deepin Linux DDE-Dock weather forcast plugin.  
+[Releases](../../releases/)  
 install：./install.sh  
 uninstall：./uninstall.sh  
 ![alt](preview.png)  
