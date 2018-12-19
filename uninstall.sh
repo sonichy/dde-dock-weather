@@ -1,3 +1,3 @@
 #!/bin/bash
-sudo rm /usr/lib/dde-dock/plugins/libWeather.so
+sudo rm /usr/lib/dde-dock/plugins/libHTYWeather.so
 killall dde-dock

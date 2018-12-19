@@ -1,12 +1,23 @@
 <RCC>
     <qresource prefix="/">
-        <file>icon/thunderstorm.svg</file>
-        <file>icon/snow.svg</file>
-        <file>icon/rain.svg</file>
-        <file>icon/drizzle.svg</file>
-        <file>icon/clouds.svg</file>
-        <file>icon/clear.svg</file>
-        <file>icon/atmosphere.svg</file>
+        <file>icon/01d.png</file>
+        <file>icon/02n.png</file>
+        <file>icon/50d.png</file>
+        <file>icon/50n.png</file>
+        <file>icon/04n.png</file>
+        <file>icon/13d.png</file>
+        <file>icon/11n.png</file>
+        <file>icon/09n.png</file>
+        <file>icon/02d.png</file>
+        <file>icon/11d.png</file>
+        <file>icon/10d.png</file>
+        <file>icon/13n.png</file>
+        <file>icon/04d.png</file>
+        <file>icon/03n.png</file>
+        <file>icon/09d.png</file>
+        <file>icon/01n.png</file>
+        <file>icon/10n.png</file>
+        <file>icon/03d.png</file>
         <file>icon/na.png</file>
     </qresource>
 </RCC>

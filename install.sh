@@ -1,3 +1,3 @@
 #!/bin/bash
-sudo cp `pwd`/libWeather.so /usr/lib/dde-dock/plugins/libWeather.so
+sudo cp `pwd`/libHTYWeather.so /usr/lib/dde-dock/plugins/libHTYWeather.so
 killall dde-dock

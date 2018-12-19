@@ -7,29 +7,30 @@
 #include <QJsonParseError>
 #include <QFile>
 #include <QStandardPaths>
+#include <QTimeZone>
 
 ForcastWidget::ForcastWidget(QWidget *parent)
     : QWidget(parent),
-      m_settings("deepin", "dde-dock-weather")
+      m_settings("deepin", "dde-dock-HTYWeather")
 {
-    setFixedWidth(250);
+    setFixedWidth(300);
 
     QGridLayout *layout = new QGridLayout;
     for (int i=0; i<6; i++) {
-        labelWImg[i] = new QLabel("");
-        labelWImg[i]->setPixmap(QPixmap(":icon/clear.svg").scaled(40,40,Qt::KeepAspectRatio,Qt::SmoothTransformation));
+        labelWImg[i] = new QLabel;
+        labelWImg[i]->setPixmap(QPixmap(":icon/na.png"));
         labelWImg[i]->setAlignment(Qt::AlignCenter);
         layout->addWidget(labelWImg[i],i,0);
-        labelTemp[i] = new QLabel("15~20°C");
+        labelTemp[i] = new QLabel("25°C");
         labelTemp[i]->setAlignment(Qt::AlignCenter);
         layout->addWidget(labelTemp[i],i,1);
         if (i==0) {
             labelTemp[i]->setStyleSheet("color:white;font-size:20px;");
-            labelDate[i] = new QLabel("城市");
+            labelDate[i] = new QLabel("City");
             labelDate[i]->setStyleSheet("color:white;font-size:20px;");
         } else {
             labelTemp[i]->setStyleSheet("color:white;font-size:12px;");
-            labelDate[i] = new QLabel("1月1日 周一");
+            labelDate[i] = new QLabel("01-01 Mon");
             labelDate[i]->setStyleSheet("color:white;font-size:12px;");
         }
         labelDate[i]->setAlignment(Qt::AlignCenter);
@@ -41,131 +42,82 @@ ForcastWidget::ForcastWidget(QWidget *parent)
 void ForcastWidget::updateWeather()
 {
     QDateTime currentDateTime = QDateTime::currentDateTime();
-    QString city = "", sw = "", temp = "", stip = "", latitude = "", longitude = "", surl="";
+    QString sw = "", stemp = "", stip = "", surl="";
     QString log = currentDateTime.toString("yyyy/MM/dd HH:mm:ss") + "\n";
     QNetworkAccessManager manager;
     QEventLoop loop;
     QNetworkReply *reply;
 
-    QString setting_city = m_settings.value("city","").toString();
-    if(setting_city != ""){
-        city = setting_city;
-    }else{
-    // IP转城市名
-    /*
-    surl = "http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json";
-    QNetworkAccessManager manager;
-    QEventLoop loop;
-    QNetworkReply *reply;
-    reply = manager.get(QNetworkRequest(QUrl(surl)));
-    connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
-    loop.exec();
-    QByteArray BA = reply->readAll();
-    qDebug() << surl ;
-    qDebug() << BA;
-    log += surl + "\n";
-    log += BA + "\n";
-    QJsonParseError JPE;
-    QJsonDocument JD = QJsonDocument::fromJson(BA, &JPE);
-    if (JPE.error == QJsonParseError::NoError) {
-        if (JD.isObject()) {
-            QJsonObject JO = JD.object();
-            if (JO.contains("city")) {
-                QJsonValue JV = JO.take("city");
-                if (JV.isString()) {
-                    city = JV.toString();
-                }
-            }
-        }
-    }
-    */
-
-        surl = "http://ip.chinaz.com/getip.aspx";
+    QString city = m_settings.value("city","").toString();
+    QString country = m_settings.value("country","").toString();
+    if(city != "" && country != ""){
+        QString appid = "8f3c852b69f0417fac76cd52c894ba63";
+        surl = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "," + country + "&appid=" + appid;
         reply = manager.get(QNetworkRequest(QUrl(surl)));
-        connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+        QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
         loop.exec();
-        QString s(reply->readAll());
-        qDebug() << surl ;
-        qDebug() << s;
+        QByteArray BA = reply->readAll();
+        qDebug() << surl;
+        qDebug() << BA;
         log += surl + "\n";
-        log += s + "\n";
-        s = s.mid(s.indexOf(",") + 1);
-        //log += s + "\n";
-        city = s.mid(s.indexOf("'") + 1, s.length() - s.indexOf("'")  - (s.length() - s.lastIndexOf("'")) -1);
-        //log += city + "\n";
-        if(city.contains("省")){
-            city = city.mid(city.indexOf("省") + 1, city.indexOf("市") -1 - city.indexOf("省"));
-        }else{
-            city = city.left(city.indexOf("市"));
-        }
-        //log += city + "\n";
-    }
-
-    // 根据城市名取经纬度
-    surl = "http://w.api.deepin.com/v1/location/" + city;
-    reply = manager.get(QNetworkRequest(QUrl(surl)));
-    QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
-    loop.exec();
-    QByteArray BA = reply->readAll();
-    qDebug() << surl;
-    qDebug() << BA;
-    log += surl + "\n";
-    log += BA + "\n";
-    QJsonParseError JPE;
-    QJsonDocument JD = QJsonDocument::fromJson(BA, &JPE);
-    if (JPE.error == QJsonParseError::NoError) {
-        if (JD.isArray()) {
-            QJsonArray JA = JD.array();
-            latitude = JA[0].toObject().value("latitude").toString();
-            longitude = JA[0].toObject().value("longitude").toString();
-        }
-    }
-
-    // 根据经纬度取天气预报
-    surl = "http://w.api.deepin.com/v1/forecast/" + latitude + "/" + longitude;
-    reply = manager.get(QNetworkRequest(QUrl(surl)));
-    QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
-    loop.exec();
-    BA = reply->readAll();
-    qDebug() << surl;
-    qDebug() << BA;
-    log += surl + "\n";
-    log += BA;
-    JD = QJsonDocument::fromJson(BA, &JPE);
-    if (JPE.error == QJsonParseError::NoError) {
-        if (JD.isArray()) {
-            QJsonArray JA = JD.array();
-            for (int i=0; i<JA.size(); i++) {
-                QString weatherName = JA[i].toObject().value("name").toString();
-                QString fileName = ":icon/" + weatherName.toLower() + ".svg";
-                if (i == 0) {
-                    QPixmap pixmap(fileName);
-                    labelWImg[i]->setPixmap(pixmap.scaled(80,80,Qt::KeepAspectRatio,Qt::SmoothTransformation));
-                    temp = QString::number(JA[i].toObject().value("temperatureMin").toInt()) + "°C";
-                    labelTemp[i]->setText(temp);
-                    labelDate[i]->setText(city);
-                    sw = translateWeather(weatherName);
-                    stip = city + "\n" + sw + "\n" + temp + "\n刷新：" + currentDateTime.toString("HH:mm:ss");
-                    emit weatherNow(sw, temp, stip, pixmap);
-                } else {
-                    labelWImg[i]->setPixmap(QPixmap(fileName).scaled(40,40,Qt::KeepAspectRatio,Qt::SmoothTransformation));
-                    labelTemp[i]->setText(QString::number(JA[i].toObject().value("temperatureMin").toInt()) + "~" + QString::number(JA[i].toObject().value("temperatureMax").toInt()) + "°C");
-                    QDateTime date = QDateTime::fromTime_t(JA[i].toObject().value("date").toInt());
-                    labelDate[i]->setText(date.toString("M月d日 ddd"));
+        log += BA + "\n";
+        QJsonParseError JPE;
+        QJsonDocument JD = QJsonDocument::fromJson(BA, &JPE);
+        if (JPE.error == QJsonParseError::NoError) {
+            QString cod = JD.object().value("cod").toString();
+            if(cod == "200"){
+                QJsonObject JO_city = JD.object().value("city").toObject();
+                QJsonObject coord = JO_city.value("coord").toObject();
+                double lat = coord.value("lat").toDouble();
+                double lon = coord.value("lon").toDouble();
+                m_settings.setValue("lat", lat);
+                m_settings.setValue("lon", lon);
+                QJsonArray list = JD.object().value("list").toArray();
+                int r = 0;
+                for (int i=0; i<list.size(); i++) {
+                    QDateTime date = QDateTime::fromSecsSinceEpoch(list[i].toObject().value("dt").toInt(), QTimeZone::utc());
+                    QString sdate = date.toString("MM-dd ddd");
+                    QString dt_txt = list[i].toObject().value("dt_txt").toString();
+                    double temp = list[i].toObject().value("main").toObject().value("temp").toDouble() - 273.15;
+                    stemp = QString::number(qRound(temp)) + "°C";
+                    QString humidity = "RH: " + QString::number(list[i].toObject().value("main").toObject().value("humidity").toInt()) + "%";
+                    QString weather = list[i].toObject().value("weather").toArray().at(0).toObject().value("main").toString();
+                    QString sicon = ":icon/" + list[i].toObject().value("weather").toArray().at(0).toObject().value("icon").toString() + ".png";\
+                    QString wind = "Wind: " + QString::number(list[i].toObject().value("wind").toObject().value("speed").toDouble()) + "m/s, " + QString::number(qRound(list[i].toObject().value("wind").toObject().value("deg").toDouble())) + "°";
+                    log += dt_txt + ", " + date.toString("yyyy-MM-dd HH:mm:ss ddd") + ", " + stemp + ", " + humidity + ","+ weather + ", " + sicon + ", " + wind + "\n";
+                    if(date.time() == QTime(12,0,0)){
+                        if (r == 0) {
+                            QPixmap pixmap(sicon);
+                            labelWImg[0]->setPixmap(pixmap.scaled(100,100,Qt::KeepAspectRatio,Qt::SmoothTransformation));
+                            labelTemp[0]->setText(stemp);
+                            labelDate[0]->setText(JO_city.value("name").toString());
+                            labelWImg[1]->setPixmap(QPixmap(sicon).scaled(50,50,Qt::KeepAspectRatio,Qt::SmoothTransformation));
+                            labelTemp[1]->setText(weather + " " + stemp);
+                            labelDate[1]->setText(sdate);
+                            stip = city + "\n" + weather + "\n" + stemp + "\n" + humidity + "\n" + wind +"\nRefresh：" + currentDateTime.toString("HH:mm:ss");
+                            emit weatherNow(weather, stemp, stip, pixmap);
+                            r++;
+                        } else {
+                            labelWImg[r]->setPixmap(QPixmap(sicon).scaled(50,50,Qt::KeepAspectRatio,Qt::SmoothTransformation));
+                            labelTemp[r]->setText(weather + " " + stemp);
+                            labelDate[r]->setText(sdate);
+                        }
+                        r++;
+                    }
                 }
+            }else if(cod=="404") {
+                emit weatherNow("?", "?°C", JD.object().value("message").toString(), QPixmap(":icon/na.png"));
             }
         }
-    }
 
-    // 写log
-    QString path = QStandardPaths::standardLocations(QStandardPaths::CacheLocation).first() + "/weather.log";
-    qDebug() << path;
-    QFile file(path);
-    if (file.open(QFile::WriteOnly)) {
-        file.write(log.toUtf8());
-        file.close();
+        // log
+        QString path = QStandardPaths::standardLocations(QStandardPaths::CacheLocation).first() + "/HTYWeather.log";
+        QFile file(path);
+        if (file.open(QFile::WriteOnly)) {
+            file.write(log.toUtf8());
+            file.close();
+        }
     }
-
 }
 
 QString ForcastWidget::translateWeather(QString s)

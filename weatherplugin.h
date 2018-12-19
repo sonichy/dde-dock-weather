@@ -49,7 +49,7 @@ private:
     QSettings m_settings;
     ForcastWidget *forcastApplet;
     void MBAbout();
-    void showSatalite();
+    void showMap();
     void showLog();
     void set();
 };
