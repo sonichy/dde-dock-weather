@@ -105,9 +105,11 @@ void ForcastWidget::updateWeather()
                         r++;
                     }
                 }
-            }else if(cod=="404") {
-                emit weatherNow("?", "?°C", JD.object().value("message").toString(), QPixmap(":icon/na.png"));
+            } else {
+                emit weatherNow("?", "?°C", cod + "\n" + JD.object().value("message").toString(), QPixmap(":icon/na.png"));
             }
+        }else{
+            emit weatherNow("?", "?°C", QString(BA), QPixmap(":icon/na.png"));
         }
 
         // log
