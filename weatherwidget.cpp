@@ -12,8 +12,8 @@ WeatherWidget::WeatherWidget(QWidget *parent)
     : QWidget(parent),
     m_settings("deepin", "dde-dock-HTYWeather")
 {
-    sw = "天气";
-    temp = "温度";
+    sw = "Clima";
+    temp = "Temperatura";
     pixmap = QPixmap(":icon/na.png");
 }
 
@@ -39,7 +39,7 @@ QSize WeatherWidget::sizeHint() const
             size = FM.boundingRect(temp).size() + QSize(0,FM.boundingRect(temp).height());
         }
     }else{
-        FM.boundingRect("天气").size();
+        FM.boundingRect("Clima").size();
     }
     return size;
 }

@@ -127,17 +127,17 @@ QString ForcastWidget::translateWeather(QString s)
     QString sc = "";
     if(s == "Atmosphere"){
         return "霾";
-    } else if (s == "Clear") {
+    } else if (s == "Despejado") {
         return "晴";
-    } else if (s == "Clouds") {
+    } else if (s == "Nubloso") {
         return "多云";
-    } else if (s == "Drizzle") {
+    } else if (s == "Llovizna") {
         return "毛毛雨";
-    } else if (s == "Rain") {
+    } else if (s == "LLuvia") {
         return "雨";
-    } else if (s == "Snow") {
+    } else if (s == "Nieve") {
         return "雪";
-    } else if (s == "Thunderstorm") {
+    } else if (s == "Tormenta") {
         return "雷雨";
     }
     return sc;
