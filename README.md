@@ -1,9 +1,14 @@
 # DDE_Dock_Weather
-Deepin Linux DDE-Dock weather forcast plugin.  
-[Releases](../../releases/)  
-install：./install.sh  
-uninstall：./uninstall.sh  
-![alt](preview.png)  
-![alt](FashionMode.png)  
-### 5.0 (2018-12-19)
-* Change API to https://openweathermap.org to support world wide weather forcast.
+Creador oficial: [Sonichy](https://github.com/sonichy/WEATHER_DDE_DOCK/tree/5.0)
+
+![previa](/home/jose/Projects/WEATHER_DDE_DOCK/preview.png)
+
+Traducido al Español por la comunidad Deepin Latin Code (Comunidad de Desarrolladores de [Deepin en Español](https://deepinenespañol.org/))
+
+Con opción para activar y desactivar el plugin desde el dock
+
+![activaPlugin](/home/jose/Projects/WEATHER_DDE_DOCK/activar.png)
+
+Vista en modo eficiente
+
+![](/home/jose/Projects/WEATHER_DDE_DOCK/Efficentmode.png)
