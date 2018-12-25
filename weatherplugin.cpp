@@ -36,12 +36,12 @@ WeatherPlugin::WeatherPlugin(QObject *parent)
 
 const QString WeatherPlugin::pluginName() const
 {
-    return "weather";
+    return "HTYWeather";
 }
 
 const QString WeatherPlugin::pluginDisplayName() const
 {
-    return "天气";
+    return "HTYWeather";
 }
 
 void WeatherPlugin::init(PluginProxyInterface *proxyInter)
@@ -164,8 +164,8 @@ void WeatherPlugin::invokedMenuItem(const QString &itemKey, const QString &menuI
 
 void WeatherPlugin::MBAbout()
 {
-    QMessageBox aboutMB(QMessageBox::NoIcon, "HTYWeather 5.0", "About\n\nDeepin Linux Dock Weather Plugin.\nAuthor: 黄颖\nE-mail: sonichy@163.com\nSource: https://github.com/sonichy/WEATHER_DDE_DOCK\nAPI: https://openweathermap.org/forecast5");
-    aboutMB.setIconPixmap(QPixmap(":/icon/10d.png"));
+    QMessageBox aboutMB(QMessageBox::NoIcon, "HTYWeather 5.1", "About\n\nDeepin Linux Dock Weather Plugin.\nAuthor: 黄颖\nE-mail: sonichy@163.com\nSource: https://github.com/sonichy/WEATHER_DDE_DOCK\nAPI: https://openweathermap.org/forecast5");
+    aboutMB.setIconPixmap(QPixmap(":/icon/01d.png"));
     aboutMB.exec();
 }
 
@@ -224,6 +224,9 @@ void WeatherPlugin::set()
     QLabel *label = new QLabel("City");
     hbox->addWidget(label);
     QLineEdit *lineEdit = new QLineEdit;
+    QRegExp regExp("[a-zA-Z]+$");
+    QValidator *validator = new QRegExpValidator(regExp,lineEdit);
+    lineEdit->setValidator(validator);
     lineEdit->setText(m_settings.value("city","").toString());
     hbox->addWidget(lineEdit);
     label = new QLabel("Country");

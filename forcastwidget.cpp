@@ -18,7 +18,7 @@ ForcastWidget::ForcastWidget(QWidget *parent)
     QGridLayout *layout = new QGridLayout;
     for (int i=0; i<6; i++) {
         labelWImg[i] = new QLabel;
-        labelWImg[i]->setPixmap(QPixmap(":icon/na.png"));
+        labelWImg[i]->setPixmap(QPixmap(":icon/na.png").scaled(50,50,Qt::KeepAspectRatio,Qt::SmoothTransformation));
         labelWImg[i]->setAlignment(Qt::AlignCenter);
         layout->addWidget(labelWImg[i],i,0);
         labelTemp[i] = new QLabel("25°C");
@@ -51,14 +51,13 @@ void ForcastWidget::updateWeather()
     QString city = m_settings.value("city","").toString();
     QString country = m_settings.value("country","").toString();
     if(city != "" && country != ""){
+        emit weatherNow("Weather", "Temp", currentDateTime.toString("yyyy/MM/dd HH:mm:ss") + "\nGetting weather of " + city + "," + country, QPixmap(":icon/na.png"));
         QString appid = "8f3c852b69f0417fac76cd52c894ba63";
         surl = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "," + country + "&appid=" + appid;
         reply = manager.get(QNetworkRequest(QUrl(surl)));
         QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
         loop.exec();
         QByteArray BA = reply->readAll();
-        qDebug() << surl;
-        qDebug() << BA;
         log += surl + "\n";
         log += BA + "\n";
         QJsonParseError JPE;
@@ -88,13 +87,13 @@ void ForcastWidget::updateWeather()
                     if(date.time() == QTime(12,0,0)){
                         if (r == 0) {
                             QPixmap pixmap(sicon);
-                            labelWImg[0]->setPixmap(pixmap.scaled(100,100,Qt::KeepAspectRatio,Qt::SmoothTransformation));
+                            labelWImg[0]->setPixmap(pixmap.scaled(80,80,Qt::KeepAspectRatio,Qt::SmoothTransformation));
                             labelTemp[0]->setText(stemp);
                             labelDate[0]->setText(JO_city.value("name").toString());
                             labelWImg[1]->setPixmap(QPixmap(sicon).scaled(50,50,Qt::KeepAspectRatio,Qt::SmoothTransformation));
                             labelTemp[1]->setText(weather + " " + stemp);
                             labelDate[1]->setText(sdate);
-                            stip = city + "\n" + weather + "\n" + stemp + "\n" + humidity + "\n" + wind +"\nRefresh：" + currentDateTime.toString("HH:mm:ss");
+                            stip = city + ", " + country + "\n" + weather + "\n" + stemp + "\n" + humidity + "\n" + wind +"\nRefresh：" + currentDateTime.toString("HH:mm:ss");
                             emit weatherNow(weather, stemp, stip, pixmap);
                             r++;
                         } else {
@@ -106,10 +105,10 @@ void ForcastWidget::updateWeather()
                     }
                 }
             } else {
-                emit weatherNow("?", "?°C", cod + "\n" + JD.object().value("message").toString(), QPixmap(":icon/na.png"));
+                emit weatherNow("Weather", "Temp", cod + "\n" + JD.object().value("message").toString(), QPixmap(":icon/na.png"));
             }
         }else{
-            emit weatherNow("?", "?°C", QString(BA), QPixmap(":icon/na.png"));
+            emit weatherNow("Weather", "Temp", QString(BA), QPixmap(":icon/na.png"));
         }
 
         // log

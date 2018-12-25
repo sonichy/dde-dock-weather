@@ -12,8 +12,8 @@ WeatherWidget::WeatherWidget(QWidget *parent)
     : QWidget(parent),
     m_settings("deepin", "dde-dock-HTYWeather")
 {
-    sw = "天气";
-    temp = "温度";
+    sw = "Weather";
+    temp = "Temp";
     pixmap = QPixmap(":icon/na.png");
 }
 
@@ -34,12 +34,12 @@ QSize WeatherWidget::sizeHint() const
     const Dock::DisplayMode displayMode = qApp->property(PROP_DISPLAY_MODE).value<Dock::DisplayMode>();
     if (displayMode == Dock::Efficient) {
         if(FM.boundingRect(sw).width() >= FM.boundingRect(temp).width()){
-            size = FM.boundingRect(sw).size() + QSize(0,FM.boundingRect(sw).height());
+            size = FM.boundingRect(sw).size() + QSize(10,FM.boundingRect(sw).height());
         }else{
-            size = FM.boundingRect(temp).size() + QSize(0,FM.boundingRect(temp).height());
+            size = FM.boundingRect(temp).size() + QSize(10,FM.boundingRect(temp).height());
         }
     }else{
-        FM.boundingRect("天气").size();
+        size = QPixmap(":icon/na.png").size();
     }
     return size;
 }
