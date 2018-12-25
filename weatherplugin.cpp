@@ -224,6 +224,7 @@ void WeatherPlugin::set()
     QLabel *label = new QLabel("City");
     hbox->addWidget(label);
     QLineEdit *lineEdit = new QLineEdit;
+    lineEdit->setPlaceholderText("English Only");
     QRegExp regExp("[a-zA-Z]+$");
     QValidator *validator = new QRegExpValidator(regExp,lineEdit);
     lineEdit->setValidator(validator);
