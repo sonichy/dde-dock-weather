@@ -119,7 +119,7 @@ const QString WeatherPlugin::itemContextMenu(const QString &itemKey)
 
     QMap<QString, QVariant> refresh;
     refresh["itemId"] = "refresh";
-    refresh["itemText"] = "refresh";
+    refresh["itemText"] = "Refresh";
     refresh["isActive"] = true;
     items.push_back(refresh);
 
@@ -147,16 +147,16 @@ void WeatherPlugin::invokedMenuItem(const QString &itemKey, const QString &menuI
     Q_UNUSED(itemKey);
     Q_UNUSED(checked);
 
-    if(menuId=="about"){
+    if(menuId == "about"){
         MBAbout();
-    }else if(menuId=="set"){
+    }else if(menuId == "set"){
         set();
-    }else if(menuId=="refresh"){
+    }else if(menuId == "refresh"){
         forcastApplet->updateWeather();
         m_refershTimer->start();
-    }else if(menuId=="map"){
+    }else if(menuId == "map"){
         showMap();
-    }else if(menuId=="log"){
+    }else if(menuId == "log"){
         showLog();
     }
 
