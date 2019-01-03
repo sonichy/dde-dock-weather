@@ -14,11 +14,19 @@ ForcastWidget::ForcastWidget(QWidget *parent)
       m_settings("deepin", "dde-dock-HTYWeather")
 {
     setFixedWidth(300);
-
     QGridLayout *layout = new QGridLayout;
     for (int i=0; i<6; i++) {
         labelWImg[i] = new QLabel;
-        labelWImg[i]->setPixmap(QPixmap(":icon/na.png").scaled(50,50,Qt::KeepAspectRatio,Qt::SmoothTransformation));
+        QString icon_path = ":icon/na.png";
+        QString sicon_path = m_settings.value("icon_path","").toString();
+        if(sicon_path != ""){
+            icon_path = sicon_path + "/" + "na.png";
+            QFile file(icon_path);
+            if(!file.exists()){
+                icon_path = ":icon/na.png";
+            }
+        }
+        labelWImg[i]->setPixmap(QPixmap(icon_path).scaled(50,50,Qt::KeepAspectRatio,Qt::SmoothTransformation));
         labelWImg[i]->setAlignment(Qt::AlignCenter);
         layout->addWidget(labelWImg[i],i,0);
         labelTemp[i] = new QLabel("25°C");
@@ -42,7 +50,7 @@ ForcastWidget::ForcastWidget(QWidget *parent)
 void ForcastWidget::updateWeather()
 {
     QDateTime currentDateTime = QDateTime::currentDateTime();
-    QString sw = "", stemp = "", stip = "", surl="";
+    QString stemp = "", stip = "", surl="";
     QString log = currentDateTime.toString("yyyy/MM/dd HH:mm:ss") + "\n";
     QNetworkAccessManager manager;
     QEventLoop loop;
@@ -81,23 +89,32 @@ void ForcastWidget::updateWeather()
                     stemp = QString::number(qRound(temp)) + "°C";
                     QString humidity = "RH: " + QString::number(list[i].toObject().value("main").toObject().value("humidity").toInt()) + "%";
                     QString weather = list[i].toObject().value("weather").toArray().at(0).toObject().value("main").toString();
-                    QString sicon = ":icon/" + list[i].toObject().value("weather").toArray().at(0).toObject().value("icon").toString() + ".png";\
+                    QString icon_name = list[i].toObject().value("weather").toArray().at(0).toObject().value("icon").toString() + ".png";
+                    QString icon_path = ":icon/" + icon_name;
+                    QString sicon_path = m_settings.value("icon_path","").toString();
+                    if(sicon_path != ""){
+                        icon_path = sicon_path + "/" + icon_name;
+                        QFile file(icon_path);
+                        if(!file.exists()){
+                            icon_path = ":icon/" + icon_name;
+                        }
+                    }
                     QString wind = "Wind: " + QString::number(list[i].toObject().value("wind").toObject().value("speed").toDouble()) + "m/s, " + QString::number(qRound(list[i].toObject().value("wind").toObject().value("deg").toDouble())) + "°";
-                    log += dt_txt + ", " + date.toString("yyyy-MM-dd HH:mm:ss ddd") + ", " + stemp + ", " + humidity + ","+ weather + ", " + sicon + ", " + wind + "\n";
+                    log += dt_txt + ", " + date.toString("yyyy-MM-dd HH:mm:ss ddd") + ", " + stemp + ", " + humidity + ","+ weather + ", " + icon_path + ", " + wind + "\n";
                     if(date.time() == QTime(12,0,0)){
                         if (r == 0) {
-                            QPixmap pixmap(sicon);
+                            QPixmap pixmap(icon_path);
                             labelWImg[0]->setPixmap(pixmap.scaled(80,80,Qt::KeepAspectRatio,Qt::SmoothTransformation));
                             labelTemp[0]->setText(stemp);
                             labelDate[0]->setText(JO_city.value("name").toString());
-                            labelWImg[1]->setPixmap(QPixmap(sicon).scaled(50,50,Qt::KeepAspectRatio,Qt::SmoothTransformation));
+                            labelWImg[1]->setPixmap(QPixmap(icon_path).scaled(50,50,Qt::KeepAspectRatio,Qt::SmoothTransformation));
                             labelTemp[1]->setText(weather + " " + stemp);
                             labelDate[1]->setText(sdate);
                             stip = city + ", " + country + "\n" + weather + "\n" + stemp + "\n" + humidity + "\n" + wind +"\nRefresh：" + currentDateTime.toString("HH:mm:ss");
                             emit weatherNow(weather, stemp, stip, pixmap);
                             r++;
                         } else {
-                            labelWImg[r]->setPixmap(QPixmap(sicon).scaled(50,50,Qt::KeepAspectRatio,Qt::SmoothTransformation));
+                            labelWImg[r]->setPixmap(QPixmap(icon_path).scaled(50,50,Qt::KeepAspectRatio,Qt::SmoothTransformation));
                             labelTemp[r]->setText(weather + " " + stemp);
                             labelDate[r]->setText(sdate);
                         }
@@ -119,25 +136,4 @@ void ForcastWidget::updateWeather()
             file.close();
         }
     }
-}
-
-QString ForcastWidget::translateWeather(QString s)
-{
-    QString sc = "";
-    if(s == "Atmosphere"){
-        return "霾";
-    } else if (s == "Clear") {
-        return "晴";
-    } else if (s == "Clouds") {
-        return "多云";
-    } else if (s == "Drizzle") {
-        return "毛毛雨";
-    } else if (s == "Rain") {
-        return "雨";
-    } else if (s == "Snow") {
-        return "雪";
-    } else if (s == "Thunderstorm") {
-        return "雷雨";
-    }
-    return sc;
 }

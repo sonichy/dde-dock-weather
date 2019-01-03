@@ -8,6 +8,8 @@
 #include <QLineEdit>
 #include <QComboBox>
 #include <QPushButton>
+#include <QAction>
+#include <QFileDialog>
 
 WeatherPlugin::WeatherPlugin(QObject *parent)
     : QObject(parent),
@@ -164,7 +166,7 @@ void WeatherPlugin::invokedMenuItem(const QString &itemKey, const QString &menuI
 
 void WeatherPlugin::MBAbout()
 {
-    QMessageBox aboutMB(QMessageBox::NoIcon, "HTYWeather 5.1", "About\n\nDeepin Linux Dock Weather Plugin.\nAuthor: 黄颖\nE-mail: sonichy@163.com\nSource: https://github.com/sonichy/WEATHER_DDE_DOCK\nAPI: https://openweathermap.org/forecast5");
+    QMessageBox aboutMB(QMessageBox::NoIcon, "HTYWeather 5.2", "About\n\nDeepin Linux Dock Weather Plugin.\nAuthor: 黄颖\nE-mail: sonichy@163.com\nSource: https://github.com/sonichy/WEATHER_DDE_DOCK\nAPI: https://openweathermap.org/forecast5");
     aboutMB.setIconPixmap(QPixmap(":/icon/01d.png"));
     aboutMB.exec();
 }
@@ -223,13 +225,13 @@ void WeatherPlugin::set()
     QHBoxLayout *hbox = new QHBoxLayout;
     QLabel *label = new QLabel("City");
     hbox->addWidget(label);
-    QLineEdit *lineEdit = new QLineEdit;
-    lineEdit->setPlaceholderText("English Only");
+    QLineEdit *lineEdit_city = new QLineEdit;
+    lineEdit_city->setPlaceholderText("English Only");
     QRegExp regExp("[a-zA-Z]+$");
-    QValidator *validator = new QRegExpValidator(regExp,lineEdit);
-    lineEdit->setValidator(validator);
-    lineEdit->setText(m_settings.value("city","").toString());
-    hbox->addWidget(lineEdit);
+    QValidator *validator = new QRegExpValidator(regExp, lineEdit_city);
+    lineEdit_city->setValidator(validator);
+    lineEdit_city->setText(m_settings.value("city","").toString());
+    hbox->addWidget(lineEdit_city);
     label = new QLabel("Country");
     hbox->addWidget(label);
     QComboBox *comboBox = new QComboBox;
@@ -244,6 +246,22 @@ void WeatherPlugin::set()
     hbox = new QHBoxLayout;
     label = new QLabel("Search your city and country in openweathermap.org");
     hbox->addWidget(label);
+    hbox = new QHBoxLayout;
+    label = new QLabel("IconPath");
+    hbox->addWidget(label);
+    lineEdit_iconPath = new QLineEdit;
+    lineEdit_iconPath->setText(m_settings.value("icon_path","").toString());
+    QAction *action = new QAction(this);
+    action->setIcon(QIcon::fromTheme("folder"));
+    lineEdit_iconPath->addAction(action, QLineEdit::TrailingPosition);
+    //connect(action, SIGNAL(triggered(bool)), this, SLOT(BrowserIconPath()));
+    connect(action, &QAction::triggered, this, [=](){
+        QString iconPath = QFileDialog::getExistingDirectory(dialog, "Icon Path", m_settings.value("icon_path","").toString());
+        if (iconPath != "") {
+            lineEdit_iconPath->setText(iconPath);
+        }
+    });
+    hbox->addWidget(lineEdit_iconPath);
     vbox->addLayout(hbox);
     QPushButton *pushButton_confirm = new QPushButton("Confirm");
     QPushButton *pushButton_cancel = new QPushButton("Cancel");
@@ -255,8 +273,9 @@ void WeatherPlugin::set()
     vbox->addLayout(hbox);
     dialog->setLayout(vbox);
     if(dialog->exec() == QDialog::Accepted){
-        m_settings.setValue("city", lineEdit->text());
+        m_settings.setValue("city", lineEdit_city->text());
         m_settings.setValue("country", comboBox->currentText());
+        m_settings.setValue("icon_path", lineEdit_iconPath->text());
         forcastApplet->updateWeather();
     }
     dialog->close();

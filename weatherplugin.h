@@ -6,10 +6,10 @@
 #include "forcastwidget.h"
 #include <QTimer>
 #include <QLabel>
-#include <QGridLayout>
-#include <DBlurEffectWidget>
+#include <QLineEdit>
+//#include <DBlurEffectWidget>
 
-DWIDGET_USE_NAMESPACE
+//DWIDGET_USE_NAMESPACE
 
 class WeatherPlugin : public QObject, PluginsItemInterface
 {
@@ -48,10 +48,12 @@ private:
     QTimer *m_refershTimer;
     QSettings m_settings;
     ForcastWidget *forcastApplet;
+    QLineEdit *lineEdit_iconPath;
     void MBAbout();
     void showMap();
     void showLog();
     void set();
+
 };
 
 #endif // WEATHERPlugin_H

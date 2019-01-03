@@ -1,14 +1,11 @@
-
 #include(../dde-dock/interfaces/interfaces.pri)
 
-QT              += widgets svg network
+QT              += widgets network #svg
 TEMPLATE         = lib
 CONFIG          += plugin c++11 link_pkgconfig
 PKGCONFIG       += dtkwidget
 
-#TARGET          = $$qtLibraryTarget(datetime)
 TARGET           = HTYWeather
-#DESTDIR          = $$_PRO_FILE_PWD_/../
 DISTFILES       += weather.json
 
 HEADERS += \

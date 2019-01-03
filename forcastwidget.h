@@ -17,7 +17,6 @@ private:
     QVBoxLayout *m_centralLayout;
     QWidget *m_centralWidget;
     QLabel *labelCity, *labelRT, *labelDate[6], *labelWImg[6], *labelTemp[6];
-    QString translateWeather(QString s);
     QSettings m_settings;
 
 public slots:
