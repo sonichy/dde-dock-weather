@@ -166,8 +166,8 @@ void WeatherPlugin::invokedMenuItem(const QString &itemKey, const QString &menuI
 
 void WeatherPlugin::MBAbout()
 {
-    QMessageBox aboutMB(QMessageBox::NoIcon, "HTYWeather 5.2", "About\n\nDeepin Linux Dock Weather Plugin.\nAuthor: 黄颖\nE-mail: sonichy@163.com\nSource: https://github.com/sonichy/WEATHER_DDE_DOCK\nAPI: https://openweathermap.org/forecast5");
-    aboutMB.setIconPixmap(QPixmap(":/icon/01d.png"));
+    QMessageBox aboutMB(QMessageBox::NoIcon, "HTYWeather 5.3", "About\n\nDeepin Linux Dock Weather Plugin.\nAuthor: 黄颖\nE-mail: sonichy@163.com\nSource: https://github.com/sonichy/WEATHER_DDE_DOCK\nAPI: https://openweathermap.org/forecast5");
+    aboutMB.setIconPixmap(QPixmap(":/icon/Default/01d.png"));
     aboutMB.exec();
 }
 
@@ -246,22 +246,55 @@ void WeatherPlugin::set()
     hbox = new QHBoxLayout;
     label = new QLabel("Search your city and country in openweathermap.org");
     hbox->addWidget(label);
+    /*
     hbox = new QHBoxLayout;
     label = new QLabel("IconPath");
     hbox->addWidget(label);
     lineEdit_iconPath = new QLineEdit;
-    lineEdit_iconPath->setText(m_settings.value("icon_path","").toString());
+    lineEdit_iconPath->setText(m_settings.value("IconPath","").toString());
     QAction *action = new QAction(this);
     action->setIcon(QIcon::fromTheme("folder"));
     lineEdit_iconPath->addAction(action, QLineEdit::TrailingPosition);
-    //connect(action, SIGNAL(triggered(bool)), this, SLOT(BrowserIconPath()));
     connect(action, &QAction::triggered, this, [=](){
-        QString iconPath = QFileDialog::getExistingDirectory(dialog, "Icon Path", m_settings.value("icon_path","").toString());
+        QString iconPath = QFileDialog::getExistingDirectory(dialog, "Icon Path", m_settings.value("IconPath","").toString());
         if (iconPath != "") {
             lineEdit_iconPath->setText(iconPath);
         }
     });
     hbox->addWidget(lineEdit_iconPath);
+    vbox->addLayout(hbox);
+    */
+    hbox = new QHBoxLayout;
+    label = new QLabel("Icon Theme (PNG only)");
+    hbox->addWidget(label);
+    QComboBox *comboBox_iconTheme = new QComboBox;
+    comboBox_iconTheme->addItem(QIcon(":icon/Default/01d.png"), "Default");
+    comboBox_iconTheme->addItem(QIcon(":icon/Simple/01d.png"), "Simple");
+    QString iconTheme = m_settings.value("IconTheme","").toString();
+    if(iconTheme == "" || !iconTheme.startsWith("/")){
+        comboBox_iconTheme->addItem("Custom");
+    }else{
+        comboBox_iconTheme->addItem(QIcon(iconTheme + "/01d.png"), iconTheme);
+    }
+    comboBox_iconTheme->setCurrentText(iconTheme);
+    //connect(comboBox_iconTheme, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [=](int index){
+    connect(comboBox_iconTheme, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated), [=](int index){
+        if(index == 2){
+            QString siconTheme = QFileDialog::getExistingDirectory(dialog, "Icon Theme", iconTheme);
+            if(siconTheme != ""){
+                QString icon_path = siconTheme + "/01d.png";
+                QFile file(icon_path);
+                if(file.exists()){
+                    comboBox_iconTheme->setItemText(index, siconTheme);
+                    comboBox_iconTheme->setItemIcon(index, QIcon(icon_path));
+                }else{
+                    QMessageBox MB(QMessageBox::Critical, "Error", icon_path + " does not exists !");
+                    MB.exec();
+                }
+            }
+        }
+    });
+    hbox->addWidget(comboBox_iconTheme);
     vbox->addLayout(hbox);
     QPushButton *pushButton_confirm = new QPushButton("Confirm");
     QPushButton *pushButton_cancel = new QPushButton("Cancel");
@@ -275,7 +308,8 @@ void WeatherPlugin::set()
     if(dialog->exec() == QDialog::Accepted){
         m_settings.setValue("city", lineEdit_city->text());
         m_settings.setValue("country", comboBox->currentText());
-        m_settings.setValue("icon_path", lineEdit_iconPath->text());
+        //m_settings.setValue("IconPath", lineEdit_iconPath->text());
+        m_settings.setValue("IconTheme", comboBox_iconTheme->currentText());
         forcastApplet->updateWeather();
     }
     dialog->close();

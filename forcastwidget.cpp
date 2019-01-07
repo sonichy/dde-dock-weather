@@ -17,13 +17,17 @@ ForcastWidget::ForcastWidget(QWidget *parent)
     QGridLayout *layout = new QGridLayout;
     for (int i=0; i<6; i++) {
         labelWImg[i] = new QLabel;
-        QString icon_path = ":icon/na.png";
-        QString sicon_path = m_settings.value("icon_path","").toString();
-        if(sicon_path != ""){
-            icon_path = sicon_path + "/" + "na.png";
-            QFile file(icon_path);
-            if(!file.exists()){
-                icon_path = ":icon/na.png";
+        QString icon_path = ":icon/Default/na.png";
+        QString iconTheme = m_settings.value("IconTheme","").toString();
+        if(iconTheme != ""){
+            if(!iconTheme.startsWith("/")){
+                icon_path = ":icon/" + iconTheme + "/" + "na.png";
+            }else{
+                icon_path = iconTheme + "/" + "na.png";
+                QFile file(icon_path);
+                if(!file.exists()){
+                    icon_path = ":icon/Default/na.png";
+                }
             }
         }
         labelWImg[i]->setPixmap(QPixmap(icon_path).scaled(50,50,Qt::KeepAspectRatio,Qt::SmoothTransformation));
@@ -90,13 +94,17 @@ void ForcastWidget::updateWeather()
                     QString humidity = "RH: " + QString::number(list[i].toObject().value("main").toObject().value("humidity").toInt()) + "%";
                     QString weather = list[i].toObject().value("weather").toArray().at(0).toObject().value("main").toString();
                     QString icon_name = list[i].toObject().value("weather").toArray().at(0).toObject().value("icon").toString() + ".png";
-                    QString icon_path = ":icon/" + icon_name;
-                    QString sicon_path = m_settings.value("icon_path","").toString();
-                    if(sicon_path != ""){
-                        icon_path = sicon_path + "/" + icon_name;
-                        QFile file(icon_path);
-                        if(!file.exists()){
-                            icon_path = ":icon/" + icon_name;
+                    QString icon_path = ":icon/Default/" + icon_name;
+                    QString iconTheme = m_settings.value("IconTheme","").toString();
+                    if(iconTheme != ""){
+                        if(!iconTheme.startsWith("/")){
+                            icon_path = ":icon/" + iconTheme + "/" + icon_name;
+                        }else{
+                            icon_path = iconTheme + "/" + icon_name;
+                            QFile file(icon_path);
+                            if(!file.exists()){
+                                icon_path = ":icon/Default/" + icon_name;
+                            }
                         }
                     }
                     QString wind = "Wind: " + QString::number(list[i].toObject().value("wind").toObject().value("speed").toDouble()) + "m/s, " + QString::number(qRound(list[i].toObject().value("wind").toObject().value("deg").toDouble())) + "°";
