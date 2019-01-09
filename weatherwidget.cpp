@@ -2,8 +2,6 @@
 #include "weatherwidget.h"
 #include <QApplication>
 #include <QPainter>
-#include <QDebug>
-//#include <QSvgRenderer>
 #include <QMouseEvent>
 
 #define PLUGIN_STATE_KEY    "enable"
@@ -56,11 +54,13 @@ void WeatherWidget::paintEvent(QPaintEvent *e)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
-    painter.setPen(Qt::white);
     if (displayMode == Dock::Efficient) {
+        painter.setPen(Qt::white);
         painter.drawText(rect(), Qt::AlignCenter, sw + "\n" + temp);
     } else {
-        painter.drawPixmap(rect(), pixmap);
+        int w = qMin(width(), height());
+        pixmap = pixmap.scaled(w*0.8, w*0.8, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        painter.drawPixmap(rect().center() - pixmap.rect().center(), pixmap);
     }
 }
 
