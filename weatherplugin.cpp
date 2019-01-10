@@ -21,8 +21,7 @@ WeatherPlugin::WeatherPlugin(QObject *parent)
     m_tipsLabel->setStyleSheet("color:white; padding:0px 3px;");
 
     m_centralWidget = new WeatherWidget;
-    connect(m_centralWidget, &WeatherWidget::requestContextMenu, [this] { m_proxyInter->requestContextMenu(this, QString()); });
-    connect(m_centralWidget, &WeatherWidget::requestUpdateGeometry, [this] { m_proxyInter->itemUpdate(this, QString()); });
+    connect(m_centralWidget, &WeatherWidget::requestUpdateGeometry, [this] { m_proxyInter->itemUpdate(this, pluginName()); });
 
     forcastApplet = new ForcastWidget;
     forcastApplet->setObjectName("forcast");
@@ -50,16 +49,16 @@ void WeatherPlugin::init(PluginProxyInterface *proxyInter)
 {
     m_proxyInter = proxyInter;
     if (m_centralWidget->enabled())
-        m_proxyInter->itemAdded(this, QString());
+        m_proxyInter->itemAdded(this, pluginName());
 }
 
 void WeatherPlugin::pluginStateSwitched()
 {
     m_centralWidget->setEnabled(!m_centralWidget->enabled());
     if (m_centralWidget->enabled())
-        m_proxyInter->itemAdded(this, QString());
+        m_proxyInter->itemAdded(this, pluginName());
     else
-        m_proxyInter->itemRemoved(this, QString());
+        m_proxyInter->itemRemoved(this, pluginName());
 }
 
 bool WeatherPlugin::pluginIsDisable()
@@ -166,7 +165,7 @@ void WeatherPlugin::invokedMenuItem(const QString &itemKey, const QString &menuI
 
 void WeatherPlugin::MBAbout()
 {
-    QMessageBox aboutMB(QMessageBox::NoIcon, "HTYWeather 5.3.1", "About\n\nDeepin Linux Dock Weather Plugin.\nAuthor: 黄颖\nE-mail: sonichy@163.com\nSource: https://github.com/sonichy/WEATHER_DDE_DOCK\nAPI: https://openweathermap.org/forecast5");
+    QMessageBox aboutMB(QMessageBox::NoIcon, "HTYWeather 5.3.2", "About\n\nDeepin Linux Dock Weather Plugin.\nAuthor: 黄颖\nE-mail: sonichy@163.com\nSource: https://github.com/sonichy/WEATHER_DDE_DOCK\nAPI: https://openweathermap.org/forecast5");
     aboutMB.setIconPixmap(QPixmap(":/icon/Default/01d.png"));
     aboutMB.exec();
 }
@@ -246,24 +245,6 @@ void WeatherPlugin::set()
     hbox = new QHBoxLayout;
     label = new QLabel("Search your city and country in openweathermap.org");
     hbox->addWidget(label);
-    /*
-    hbox = new QHBoxLayout;
-    label = new QLabel("IconPath");
-    hbox->addWidget(label);
-    lineEdit_iconPath = new QLineEdit;
-    lineEdit_iconPath->setText(m_settings.value("IconPath","").toString());
-    QAction *action = new QAction(this);
-    action->setIcon(QIcon::fromTheme("folder"));
-    lineEdit_iconPath->addAction(action, QLineEdit::TrailingPosition);
-    connect(action, &QAction::triggered, this, [=](){
-        QString iconPath = QFileDialog::getExistingDirectory(dialog, "Icon Path", m_settings.value("IconPath","").toString());
-        if (iconPath != "") {
-            lineEdit_iconPath->setText(iconPath);
-        }
-    });
-    hbox->addWidget(lineEdit_iconPath);
-    vbox->addLayout(hbox);
-    */
     hbox = new QHBoxLayout;
     label = new QLabel("Icon Theme (PNG only)");
     hbox->addWidget(label);
@@ -277,7 +258,6 @@ void WeatherPlugin::set()
         comboBox_iconTheme->addItem(QIcon(iconTheme + "/01d.png"), iconTheme);
     }
     comboBox_iconTheme->setCurrentText(iconTheme);
-    //connect(comboBox_iconTheme, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [=](int index){
     connect(comboBox_iconTheme, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated), [=](int index){
         if(index == 2){
             QString siconTheme = QFileDialog::getExistingDirectory(dialog, "Icon Theme", iconTheme);
@@ -308,7 +288,6 @@ void WeatherPlugin::set()
     if(dialog->exec() == QDialog::Accepted){
         m_settings.setValue("city", lineEdit_city->text());
         m_settings.setValue("country", comboBox->currentText());
-        //m_settings.setValue("IconPath", lineEdit_iconPath->text());
         m_settings.setValue("IconTheme", comboBox_iconTheme->currentText());
         forcastApplet->updateWeather();
     }
