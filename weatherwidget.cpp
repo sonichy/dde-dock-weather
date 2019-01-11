@@ -63,18 +63,3 @@ void WeatherWidget::paintEvent(QPaintEvent *e)
         painter.drawPixmap(rect().center() - pixmap.rect().center(), pixmap);
     }
 }
-
-void WeatherWidget::mousePressEvent(QMouseEvent *e)
-{
-    if (e->button() != Qt::RightButton)
-        return QWidget::mousePressEvent(e);
-
-    const QPoint p(e->pos() - rect().center());
-    if (p.manhattanLength() < std::min(width(), height()) * 0.8 * 0.5)
-    {
-        emit requestContextMenu();
-        return;
-    }
-
-    QWidget::mousePressEvent(e);
-}

@@ -25,7 +25,6 @@ private:
     QSize sizeHint() const;
     void resizeEvent(QResizeEvent *e);
     void paintEvent(QPaintEvent *e);
-    void mousePressEvent(QMouseEvent *e);
     QSettings m_settings;
 };
 
