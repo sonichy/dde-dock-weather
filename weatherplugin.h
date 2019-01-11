@@ -7,9 +7,6 @@
 #include <QTimer>
 #include <QLabel>
 #include <QLineEdit>
-//#include <DBlurEffectWidget>
-
-//DWIDGET_USE_NAMESPACE
 
 class WeatherPlugin : public QObject, PluginsItemInterface
 {

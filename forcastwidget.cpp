@@ -21,16 +21,16 @@ ForcastWidget::ForcastWidget(QWidget *parent)
         QString iconTheme = m_settings.value("IconTheme","").toString();
         if(iconTheme != ""){
             if(!iconTheme.startsWith("/")){
-                icon_path = ":icon/" + iconTheme + "/" + "na.png";
+                icon_path = ":icon/" + iconTheme + "/na.png";
             }else{
-                icon_path = iconTheme + "/" + "na.png";
-                QFile file(icon_path);
-                if(!file.exists()){
-                    icon_path = ":icon/Default/na.png";
+                QString icon_path1 = iconTheme + "/na.png";
+                QFile file(icon_path1);
+                if(file.exists()){
+                    icon_path = icon_path1;
                 }
             }
         }
-        labelWImg[i]->setPixmap(QPixmap(icon_path).scaled(50,50,Qt::KeepAspectRatio,Qt::SmoothTransformation));
+        labelWImg[i]->setPixmap(QPixmap(icon_path).scaled(50, 50, Qt::KeepAspectRatio, Qt::SmoothTransformation));
         labelWImg[i]->setAlignment(Qt::AlignCenter);
         layout->addWidget(labelWImg[i],i,0);
         labelTemp[i] = new QLabel("25°C");
@@ -63,7 +63,20 @@ void ForcastWidget::updateWeather()
     QString city = m_settings.value("city","").toString();
     QString country = m_settings.value("country","").toString();
     if(city != "" && country != ""){
-        emit weatherNow("Weather", "Temp", currentDateTime.toString("yyyy/MM/dd HH:mm:ss") + "\nGetting weather of " + city + "," + country, QPixmap(":icon/na.png"));
+        QString icon_path = ":icon/Default/na.png";
+        QString iconTheme = m_settings.value("IconTheme","").toString();
+        if(iconTheme != ""){
+            if(!iconTheme.startsWith("/")){
+                icon_path = ":icon/" + iconTheme + "/na.png";
+            }else{
+                QString icon_path1 = iconTheme + "/na.png";
+                QFile file(icon_path1);
+                if(file.exists()){
+                    icon_path = icon_path1;
+                }
+            }
+        }
+        emit weatherNow("Weather", "Temp", currentDateTime.toString("yyyy/MM/dd HH:mm:ss") + "\nGetting weather of " + city + "," + country, QPixmap(icon_path));
         QString appid = "8f3c852b69f0417fac76cd52c894ba63";
         surl = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "," + country + "&appid=" + appid;
         reply = manager.get(QNetworkRequest(QUrl(surl)));
@@ -100,10 +113,10 @@ void ForcastWidget::updateWeather()
                         if(!iconTheme.startsWith("/")){
                             icon_path = ":icon/" + iconTheme + "/" + icon_name;
                         }else{
-                            icon_path = iconTheme + "/" + icon_name;
-                            QFile file(icon_path);
-                            if(!file.exists()){
-                                icon_path = ":icon/Default/" + icon_name;
+                            QString icon_path1 = iconTheme + "/" + icon_name;
+                            QFile file(icon_path1);
+                            if(file.exists()){
+                                icon_path = icon_path1;
                             }
                         }
                     }

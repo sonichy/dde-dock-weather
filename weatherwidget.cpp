@@ -12,7 +12,7 @@ WeatherWidget::WeatherWidget(QWidget *parent)
 {
     sw = "Weather";
     temp = "Temp";
-    pixmap = QPixmap(":icon/na.png");
+    pixmap = QPixmap(":icon/Default/na.png");
 }
 
 bool WeatherWidget::enabled()
