@@ -143,7 +143,7 @@ void ForcastWidget::updateWeather()
                     }
                 }
             } else {
-                emit weatherNow("Weather", "Temp", cod + "\n" + JD.object().value("message").toString(), QPixmap(":icon/na.png"));
+                emit weatherNow("Weather", "Temp", city + ", " + country + "\n" + cod + "\n" + JD.object().value("message").toString(), QPixmap(":icon/na.png"));
             }
         }else{
             emit weatherNow("Weather", "Temp", QString(BA), QPixmap(":icon/na.png"));

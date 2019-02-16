@@ -165,7 +165,7 @@ void WeatherPlugin::invokedMenuItem(const QString &itemKey, const QString &menuI
 
 void WeatherPlugin::MBAbout()
 {
-    QMessageBox aboutMB(QMessageBox::NoIcon, "HTYWeather 5.3.2", "About\n\nDeepin Linux Dock Weather Plugin.\nAuthor: 黄颖\nE-mail: sonichy@163.com\nSource: https://github.com/sonichy/WEATHER_DDE_DOCK\nAPI: https://openweathermap.org/forecast5");
+    QMessageBox aboutMB(QMessageBox::NoIcon, "HTYWeather 5.3.3", "About\n\nDeepin Linux Dock Weather Plugin.\nAuthor: 黄颖\nE-mail: sonichy@163.com\nSource: https://github.com/sonichy/WEATHER_DDE_DOCK\nAPI: https://openweathermap.org/forecast5");
     aboutMB.setIconPixmap(QPixmap(":/icon/Default/01d.png"));
     aboutMB.exec();
 }
@@ -175,6 +175,7 @@ void WeatherPlugin::weatherNow(QString weather, QString temp, QString stip, QPix
     m_centralWidget->sw = weather;
     m_centralWidget->temp = temp;
     m_centralWidget->pixmap = pixmap;
+    m_centralWidget->update();
     m_tipsLabel->setText(stip);
 }
 
@@ -226,7 +227,7 @@ void WeatherPlugin::set()
     hbox->addWidget(label);
     QLineEdit *lineEdit_city = new QLineEdit;
     lineEdit_city->setPlaceholderText("English Only");
-    QRegExp regExp("[a-zA-Z]+$");
+    QRegExp regExp("[a-zA-Z ]+$");
     QValidator *validator = new QRegExpValidator(regExp, lineEdit_city);
     lineEdit_city->setValidator(validator);
     lineEdit_city->setText(m_settings.value("city","").toString());
