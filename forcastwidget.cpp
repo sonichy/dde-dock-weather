@@ -104,6 +104,9 @@ void ForcastWidget::updateWeather()
                     QString dt_txt = list[i].toObject().value("dt_txt").toString();
                     double temp = list[i].toObject().value("main").toObject().value("temp").toDouble() - 273.15;
                     stemp = QString::number(qRound(temp)) + "°C";
+                    if(m_settings.value("TemperatureUnit","°C").toString() == "°F"){
+                        stemp = QString::number(qRound(temp*1.8 + 32)) + "°F";
+                    }
                     QString humidity = "RH: " + QString::number(list[i].toObject().value("main").toObject().value("humidity").toInt()) + "%";
                     QString weather = list[i].toObject().value("weather").toArray().at(0).toObject().value("main").toString();
                     QString icon_name = list[i].toObject().value("weather").toArray().at(0).toObject().value("icon").toString() + ".png";
