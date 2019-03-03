@@ -25,7 +25,10 @@ Debian: `sudo apt install dde-dock-dev qt5-default`
 | NA | na.png | na.png | ![alt](icon/Default/na.png) |
 
 #### Because the night time is not very accurate, we use the same icon for day and night.
-
+### 5.4 (2019-03-03)
+Add temperature unit set:  
+![alt](TemperatureUnit.png)
+![alt](Fahrenheit.png)
 ### 5.3 (2019-01-07)
 * Support icon theme  
 ![alt](IconTheme.png)
