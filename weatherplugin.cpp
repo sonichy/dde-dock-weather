@@ -165,7 +165,7 @@ void WeatherPlugin::invokedMenuItem(const QString &itemKey, const QString &menuI
 
 void WeatherPlugin::MBAbout()
 {
-    QMessageBox aboutMB(QMessageBox::NoIcon, "HTYWeather 5.4", "About\n\nDeepin Linux Dock Weather Plugin.\nAuthor: 黄颖\nE-mail: sonichy@163.com\nSource: https://github.com/sonichy/WEATHER_DDE_DOCK\nAPI: https://openweathermap.org/forecast5");
+    QMessageBox aboutMB(QMessageBox::NoIcon, "HTYWeather 5.5", "About\n\nDeepin Linux Dock Weather Plugin.\nAuthor: 黄颖\nE-mail: sonichy@163.com\nSource: https://github.com/sonichy/WEATHER_DDE_DOCK\nAPI: https://openweathermap.org/forecast5");
     aboutMB.setIconPixmap(QPixmap(":/icon/Default/01d.png"));
     aboutMB.exec();
 }
@@ -244,8 +244,12 @@ void WeatherPlugin::set()
     hbox->addWidget(comboBox_country);
     vbox->addLayout(hbox);
     hbox = new QHBoxLayout;
-    label = new QLabel("Search your city and country in openweathermap.org");
+    label = new QLabel("Search your city and country in <a style='color:white;' href='https://openweathermap.org'>openweathermap.org</a>");
+    connect(label, &QLabel::linkActivated, [](QString url){
+        QDesktopServices::openUrl(QUrl(url));
+    });
     hbox->addWidget(label);
+    vbox->addLayout(hbox);
     hbox = new QHBoxLayout;
     label = new QLabel("Icon Theme (PNG only)");
     hbox->addWidget(label);
