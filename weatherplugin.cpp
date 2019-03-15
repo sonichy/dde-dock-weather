@@ -165,7 +165,7 @@ void WeatherPlugin::invokedMenuItem(const QString &itemKey, const QString &menuI
 
 void WeatherPlugin::MBAbout()
 {
-    QMessageBox aboutMB(QMessageBox::NoIcon, "HTYWeather 5.5", "About\n\nDeepin Linux Dock Weather Plugin.\nAuthor: 黄颖\nE-mail: sonichy@163.com\nSource: https://github.com/sonichy/WEATHER_DDE_DOCK\nAPI: https://openweathermap.org/forecast5");
+    QMessageBox aboutMB(QMessageBox::NoIcon, "HTYWeather 5.6", "About\n\nDeepin Linux Dock Weather Plugin.\nAuthor: 黄颖\nE-mail: sonichy@163.com\nSource: https://github.com/sonichy/WEATHER_DDE_DOCK\nAPI: https://openweathermap.org/forecast5");
     aboutMB.setIconPixmap(QPixmap(":/icon/Default/01d.png"));
     aboutMB.exec();
 }
@@ -256,15 +256,16 @@ void WeatherPlugin::set()
     QComboBox *comboBox_iconTheme = new QComboBox;
     comboBox_iconTheme->addItem(QIcon(":icon/Default/01d.png"), "Default");
     comboBox_iconTheme->addItem(QIcon(":icon/Simple/01d.png"), "Simple");
+    comboBox_iconTheme->addItem(QIcon(":icon/Flat/01d.png"), "Flat");
     QString iconTheme = m_settings.value("IconTheme","").toString();
     if(iconTheme == "" || !iconTheme.startsWith("/")){
-        comboBox_iconTheme->addItem("Custom");
+        comboBox_iconTheme->addItem(QIcon(":icon/custom.png"),"Custom");
     }else{
         comboBox_iconTheme->addItem(QIcon(iconTheme + "/01d.png"), iconTheme);
     }
     comboBox_iconTheme->setCurrentText(iconTheme);
     connect(comboBox_iconTheme, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated), [=](int index){
-        if(index == 2){
+        if(index == 3){
             QString siconTheme = QFileDialog::getExistingDirectory(dialog, "Icon Theme", iconTheme);
             if(siconTheme != ""){
                 QString icon_path = siconTheme + "/01d.png";
