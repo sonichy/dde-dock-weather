@@ -96,12 +96,12 @@ void ForcastWidget::updateWeather()
                 double lon = coord.value("lon").toDouble();
                 m_settings.setValue("lat", lat);
                 m_settings.setValue("lon", lon);
-                QDateTime time_sunrise = QDateTime::fromSecsSinceEpoch(JO_city.value("sunrise").toInt(), Qt::LocalTime);
-                QDateTime time_sunset = QDateTime::fromSecsSinceEpoch(JO_city.value("sunset").toInt(), Qt::LocalTime);
+                QDateTime time_sunrise = QDateTime::fromMSecsSinceEpoch(JO_city.value("sunrise").toInt()*1000L, Qt::LocalTime);
+                QDateTime time_sunset = QDateTime::fromMSecsSinceEpoch(JO_city.value("sunset").toInt()*1000L, Qt::LocalTime);
                 QJsonArray list = JD.object().value("list").toArray();
                 int r = 0;
                 for (int i=0; i<list.size(); i++) {
-                    QDateTime date = QDateTime::fromSecsSinceEpoch(list[i].toObject().value("dt").toInt(), Qt::UTC);
+                    QDateTime date = QDateTime::fromMSecsSinceEpoch(list[i].toObject().value("dt").toInt()*1000L, Qt::UTC);
                     QString sdate = date.toString("MM-dd ddd");
                     QString dt_txt = list[i].toObject().value("dt_txt").toString();
                     double temp = list[i].toObject().value("main").toObject().value("temp").toDouble() - 273.15;
