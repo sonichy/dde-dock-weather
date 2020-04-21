@@ -165,7 +165,7 @@ void WeatherPlugin::invokedMenuItem(const QString &itemKey, const QString &menuI
 
 void WeatherPlugin::MBAbout()
 {
-    QMessageBox aboutMB(QMessageBox::NoIcon, "HTYWeather 5.7", "About\n\nDeepin Linux Dock Weather Plugin.\nAuthor: 黄颖\nE-mail: sonichy@163.com\nSource: https://github.com/sonichy/WEATHER_DDE_DOCK\nAPI: https://openweathermap.org/forecast5");
+    QMessageBox aboutMB(QMessageBox::NoIcon, "HTYWeather 5.8", "About\n\nDeepin Linux Dock Weather Plugin.\nAuthor: 海天鹰\nE-mail: sonichy@163.com\nSource: https://github.com/sonichy/WEATHER_DDE_DOCK\nAPI: https://openweathermap.org/forecast5");
     aboutMB.setIconPixmap(QPixmap(":/icon/Default/01d.png"));
     aboutMB.exec();
 }
@@ -189,7 +189,7 @@ void WeatherPlugin::showMap()
 
     QDateTime currentDateTime = QDateTime::currentDateTime();
     QString log = currentDateTime.toString("yyyy/MM/dd HH:mm:ss") + " : " + surl;
-    QString path = QStandardPaths::standardLocations(QStandardPaths::CacheLocation).first() + "/HTYWeather.log";
+    QString path = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/HTYWeather.log";
     QFile file(path);
     if (file.open(QFile::WriteOnly | QFile::Append)) {
         file.write(log.toUtf8());
@@ -213,7 +213,7 @@ void WeatherPlugin::showMap()
 
 void WeatherPlugin::showLog()
 {
-    QString surl = "file://" + QStandardPaths::standardLocations(QStandardPaths::CacheLocation).first() + "/HTYWeather.log";
+    QString surl = "file://" + QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/HTYWeather.log";
     QDesktopServices::openUrl(QUrl(surl));
 }
 
@@ -221,6 +221,7 @@ void WeatherPlugin::set()
 {
     QDialog *dialog = new QDialog;
     dialog->setWindowTitle("Set");
+    dialog->setFixedSize(350, 200);
     QVBoxLayout *vbox = new QVBoxLayout;
     QHBoxLayout *hbox = new QHBoxLayout;
     QLabel *label = new QLabel("City");
@@ -296,8 +297,10 @@ void WeatherPlugin::set()
     connect(pushButton_confirm, SIGNAL(clicked()), dialog, SLOT(accept()));
     connect(pushButton_cancel, SIGNAL(clicked()), dialog, SLOT(reject()));
     hbox = new QHBoxLayout;
+    hbox->addStretch();
     hbox->addWidget(pushButton_confirm);
     hbox->addWidget(pushButton_cancel);
+    hbox->addStretch();
     vbox->addLayout(hbox);
     dialog->setLayout(vbox);
     if(dialog->exec() == QDialog::Accepted){
