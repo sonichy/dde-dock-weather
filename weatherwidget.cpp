@@ -37,7 +37,11 @@ QSize WeatherWidget::sizeHint() const
             size = FM.boundingRect(temp).size() + QSize(10,FM.boundingRect(temp).height());
         }
     }else{
-        size = QPixmap(":icon/na.png").size();
+        const Dock::Position position = qApp->property(PROP_POSITION).value<Dock::Position>();
+        if (position == Dock::Top || position == Dock::Bottom)
+            size = QSize(height(), height());
+        else
+            size = QSize(width(), width());
     }
     return size;
 }
@@ -53,13 +57,11 @@ void WeatherWidget::paintEvent(QPaintEvent *e)
     const Dock::DisplayMode displayMode = qApp->property(PROP_DISPLAY_MODE).value<Dock::DisplayMode>();
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
     if (displayMode == Dock::Efficient) {
         painter.setPen(Qt::white);
         painter.drawText(rect(), Qt::AlignCenter, sw + "\n" + temp);
     } else {
-        int w = qMin(width(), height());
-        pixmap = pixmap.scaled(w*0.8, w*0.8, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-        painter.drawPixmap(rect().center() - pixmap.rect().center(), pixmap);
+        QPixmap pixmap1 = pixmap.scaled(width(), height(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        painter.drawPixmap(rect().center() - pixmap1.rect().center(), pixmap1);
     }
 }

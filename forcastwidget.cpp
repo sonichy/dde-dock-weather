@@ -96,14 +96,19 @@ void ForcastWidget::updateWeather()
                 double lon = coord.value("lon").toDouble();
                 m_settings.setValue("lat", lat);
                 m_settings.setValue("lon", lon);
+                QDateTime time_sunrise = QDateTime::fromMSecsSinceEpoch(JO_city.value("sunrise").toInt()*1000L, Qt::LocalTime);
+                QDateTime time_sunset = QDateTime::fromMSecsSinceEpoch(JO_city.value("sunset").toInt()*1000L, Qt::LocalTime);
                 QJsonArray list = JD.object().value("list").toArray();
                 int r = 0;
                 for (int i=0; i<list.size(); i++) {
-                    QDateTime date = QDateTime::fromSecsSinceEpoch(list[i].toObject().value("dt").toInt(), QTimeZone::utc());
+                    QDateTime date = QDateTime::fromMSecsSinceEpoch(list[i].toObject().value("dt").toInt()*1000L, Qt::UTC);
                     QString sdate = date.toString("MM-dd ddd");
                     QString dt_txt = list[i].toObject().value("dt_txt").toString();
                     double temp = list[i].toObject().value("main").toObject().value("temp").toDouble() - 273.15;
                     stemp = QString::number(qRound(temp)) + "°C";
+                    if(m_settings.value("TemperatureUnit","°C").toString() == "°F"){
+                        stemp = QString::number(qRound(temp*1.8 + 32)) + "°F";
+                    }
                     QString humidity = "RH: " + QString::number(list[i].toObject().value("main").toObject().value("humidity").toInt()) + "%";
                     QString weather = list[i].toObject().value("weather").toArray().at(0).toObject().value("main").toString();
                     QString icon_name = list[i].toObject().value("weather").toArray().at(0).toObject().value("icon").toString() + ".png";
@@ -131,7 +136,7 @@ void ForcastWidget::updateWeather()
                             labelWImg[1]->setPixmap(QPixmap(icon_path).scaled(50,50,Qt::KeepAspectRatio,Qt::SmoothTransformation));
                             labelTemp[1]->setText(weather + " " + stemp);
                             labelDate[1]->setText(sdate);
-                            stip = city + ", " + country + "\n" + weather + "\n" + stemp + "\n" + humidity + "\n" + wind +"\nRefresh：" + currentDateTime.toString("HH:mm:ss");
+                            stip = city + ", " + country + "\n" + weather + "\n" + stemp + "\n" + humidity + "\n" + wind + "\nSunrise: " + time_sunrise.toString("hh:mm") + "\nSunset: " + time_sunset.toString("hh:mm") + "\nRefresh：" + currentDateTime.toString("HH:mm:ss");
                             emit weatherNow(weather, stemp, stip, pixmap);
                             r++;
                         } else {
@@ -143,7 +148,7 @@ void ForcastWidget::updateWeather()
                     }
                 }
             } else {
-                emit weatherNow("Weather", "Temp", cod + "\n" + JD.object().value("message").toString(), QPixmap(":icon/na.png"));
+                emit weatherNow("Weather", "Temp", city + ", " + country + "\n" + cod + "\n" + JD.object().value("message").toString(), QPixmap(":icon/na.png"));
             }
         }else{
             emit weatherNow("Weather", "Temp", QString(BA), QPixmap(":icon/na.png"));
