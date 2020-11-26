@@ -106,11 +106,11 @@ const QString WeatherPlugin::itemContextMenu(const QString &itemKey)
     QList<QVariant> items;
     items.reserve(0);
 
-    QMap<QString, QVariant> about;
+ /*   QMap<QString, QVariant> about;
     about["itemId"] = "about";
     about["itemText"] = tr("About");
     about["isActive"] = true;
-    items.push_back(about);
+    items.push_back(about);*/
 
     QMap<QString, QVariant> set;
     set["itemId"] = "set";
@@ -124,17 +124,17 @@ const QString WeatherPlugin::itemContextMenu(const QString &itemKey)
     refresh["isActive"] = true;
     items.push_back(refresh);
 
-    QMap<QString, QVariant> satalite;
+ /*   QMap<QString, QVariant> satalite;
     satalite["itemId"] = "map";
     satalite["itemText"] = tr("Clouds Map");
     satalite["isActive"] = true;
-    items.push_back(satalite);
+    items.push_back(satalite);*/
 
-    QMap<QString, QVariant> log;
+ /*   QMap<QString, QVariant> log;
     log["itemId"] = "log";
     log["itemText"] = tr("Log");
     log["isActive"] = true;
-    items.push_back(log);
+    items.push_back(log);*/
 
     QMap<QString, QVariant> menu;
     menu["items"] = items;
